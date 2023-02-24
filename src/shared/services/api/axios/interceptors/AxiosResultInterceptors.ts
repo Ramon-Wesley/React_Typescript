@@ -1,6 +1,5 @@
-import {AxiosResponse} from 'axios'
+import { AxiosResponse } from "axios";
 
-export const axiosResponseInterceptor=(response:AxiosResponse)=>{
-
-    return response
-}
+export const axiosResponseInterceptor = (response: AxiosResponse) => {
+  return response;
+};

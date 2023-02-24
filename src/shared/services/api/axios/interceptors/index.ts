@@ -1,2 +1,2 @@
-export * from './AxiosErrorInterceptors'
-export * from './AxiosResultInterceptors'
+export * from "./AxiosErrorInterceptors";
+export * from "./AxiosResultInterceptors";
