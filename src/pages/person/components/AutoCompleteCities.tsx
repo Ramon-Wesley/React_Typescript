@@ -5,21 +5,21 @@ import { CitiesService } from "../../../shared/services/api/cities/CitiesService
 import { Autocomplete, TextField } from "@mui/material";
 
 interface IAutoCompleteCities {
-  isExternalLoading: boolean;
+  isExternalLoading?: boolean;
 }
 
-interface IOptionSelected {
+type TOptionSelected = {
   id: number;
   label: string;
-}
+};
 export const AutoCompleteCities: React.FC<IAutoCompleteCities> = ({
   isExternalLoading = false,
 }) => {
   const { clearError, defaultValue, error, fieldName, registerField } =
     useField("cidadeId");
   const [search, setSearch] = useState("");
-  const [selectId, setSelectId] = useState<number | undefined>(defaultValue);
-  const [options, setOptions] = useState<IOptionSelected[]>([]);
+  const [selectId, setSelectId] = useState<number | undefined>();
+  const [options, setOptions] = useState<TOptionSelected[]>([]);
   const { debounce } = UseDebounce();
 
   useEffect(() => {
@@ -45,20 +45,23 @@ export const AutoCompleteCities: React.FC<IAutoCompleteCities> = ({
 
   const autoCompleteValue = useMemo(() => {
     if (!selectId) return null;
-
     const result = options.find((op) => op.id === selectId);
-
     if (!result) return null;
-
     return result;
   }, [selectId, options]);
+
   return (
     <Autocomplete
+      openText="Abrir"
+      closeText="Fechar"
+      noOptionsText="Sem opções"
+      clearText="Apagar"
+      disablePortal
       value={autoCompleteValue}
-      onInputChange={(_, e) => setSearch(e)}
+      onInputChange={(_, newValue) => setSearch(newValue)}
       options={options}
-      onChange={(_, e) => {
-        setSelectId(e?.id);
+      onChange={(_, newValue) => {
+        setSelectId(newValue?.id);
         setSearch("");
         clearError();
       }}

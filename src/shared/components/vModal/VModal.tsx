@@ -21,12 +21,12 @@ interface IMessageAlert {
     | "success"
     | "warning"
     | undefined;
-  icon: string;
-  title: string;
-  subTitle?: string;
-  handleOnClick: () => void;
+  icon: "help_outline" | "error_outline";
+  title: "deseja apagar o registro?" | "Deseja salvar o registro?";
+  subTitle?: "excluirá permanentemente" | "";
+  handleOnClick: () => void | undefined;
   handleIsOpen: () => void;
-  textButton: string;
+  textButton: "Excluir" | "Cadastrar";
 }
 
 export const VModal: React.FC<IMessageAlert> = ({

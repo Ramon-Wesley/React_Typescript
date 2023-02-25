@@ -15,7 +15,7 @@ import {
   IconButton,
   Icon,
 } from "@mui/material";
-import { useSearchParams, useNavigate } from "react-router-dom";
+import { useSearchParams, useNavigate,useLocation } from "react-router-dom";
 import { useState, useMemo, useEffect, useCallback, useRef } from "react";
 import { IPersons, PersonService } from "../../shared/services/api/persons";
 import { UseDebounce } from "../../shared/hook";
@@ -33,10 +33,12 @@ export const People: React.FC = () => {
   const [typeAlert, setTypeAlert] = useState<AlertColor>();
   const [messageAlert, setMessageAlert] = useState<string>();
 
+  const location=useLocation();
+  
   const getSearch = useMemo(() => {
     return searchParams.get("busca") || "";
   }, [searchParams]);
-
+  
   const getPage = useMemo(() => {
     return Number(searchParams.get("pagina") || 1);
   }, [searchParams]);
@@ -46,12 +48,12 @@ export const People: React.FC = () => {
     idResult.current = id;
     console.log(idResult.current);
   }, []);
-
+  
   const closeModal = useCallback(() => {
     setOpen(false);
     idResult.current = undefined;
   }, []);
-
+  
   const handleDelete = useCallback(() => {
     setOpen(false);
     if (idResult.current) {
@@ -69,10 +71,16 @@ export const People: React.FC = () => {
       });
     }
   }, []);
-
+  
   useEffect(() => {
+    if(location.state){
+      setMessageAlert(location.state.message)
+      setTypeAlert(location.state.type)
+    }
     if (typeAlert && messageAlert) {
       setTimeout(() => {
+        location.state.message=undefined
+        location.state.type=undefined
         setTypeAlert(undefined);
         setMessageAlert(undefined);
       }, 2000);
@@ -121,8 +129,8 @@ export const People: React.FC = () => {
           icon="error_outline"
           color="warning"
           textButton="Excluir"
-          title="Deseja apagar o registro?"
-          subTitle="Excluirá permanentemente!"
+          title='deseja apagar o registro?'
+          subTitle="excluirá permanentemente"
         />
       )}
 

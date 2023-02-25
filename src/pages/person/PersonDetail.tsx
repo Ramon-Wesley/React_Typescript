@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { DetailsTools } from "../../shared/components/detailsTools/DetailsTools";
 import { LayoutBase } from "../../shared/layouts";
@@ -9,10 +9,15 @@ import { UseVForm } from "../../shared/form/UseVForm";
 import { Form } from "@unform/web";
 import * as yup from "yup";
 import { AutoCompleteCities } from "./components/AutoCompleteCities";
+import { VModal } from "../../shared/components/vModal/VModal";
 
 export const PersonDetail: React.FC = () => {
+  type TNameAction = "save" | "saveAndClose" | "delete" | undefined;
+
   const { id = "nova" } = useParams<"id">();
   const [name, setName] = useState<string>();
+  const [modalOpen, setModalOpen] = useState(false);
+  const nameAction = useRef<TNameAction>();
   const { save, IsSaveAndClose, saveAndClose, formRef } = UseVForm();
   const navigate = useNavigate();
 
@@ -24,6 +29,8 @@ export const PersonDetail: React.FC = () => {
         } else {
           setName(response.nome);
           formRef.current?.setData(response);
+          console.log(response.cidadeId);
+          console.log(formRef.current?.getData());
         }
       });
     } else {
@@ -48,6 +55,7 @@ export const PersonDetail: React.FC = () => {
   });
 
   const handleSubmit = useCallback((values: IForm) => {
+    console.log(values);
     validationInputs
       .validate(values, { abortEarly: false })
       .then((response) => {
@@ -75,13 +83,68 @@ export const PersonDetail: React.FC = () => {
       });
   }, []);
 
+  const handleDelete = useCallback((id: number) => {
+    PersonService.deleteById(id).then((response) => {
+      if (response instanceof Error) {
+        navigate("/pessoas", {
+          state: { message: "Erro ao excluir o registro!", type: "error" },
+        });
+      } else {
+        navigate("/pessoas", {
+          state: { message: "Cadastro excluído com sucesso!", type: "success" },
+        });
+      }
+    });
+  }, []);
+
+  const openModal = useCallback((name: TNameAction) => {
+    setModalOpen(true);
+    nameAction.current = name;
+  }, []);
+  const closeModal = useCallback(() => {
+    setModalOpen(false);
+    nameAction.current = undefined;
+  }, []);
+
   return (
     <LayoutBase
       title={id === "nova" ? "Cadastro de pessoa" : name ? name : ""}
       tools={
-        <DetailsTools onclickSave={save} onclickSaveAndBack={saveAndClose} />
+        <DetailsTools
+          onclickSave={() => openModal("save")}
+          onclickSaveAndBack={() => openModal("saveAndClose")}
+          onclickDelete={() => openModal("delete")}
+          onclickBack={() => navigate("/pessoas")}
+          onclickNew={() => navigate("/pessoas/nova")}
+        />
       }
     >
+      <VModal
+        handleIsOpen={closeModal}
+        handleOnClick={
+          nameAction.current === "saveAndClose"
+            ? saveAndClose
+            : nameAction.current === "save"
+            ? save
+            : nameAction.current === "delete"
+            ? ()=>handleDelete(Number(id))
+            : ()=> undefined
+        }
+        color={nameAction.current === "delete" ? "warning" : "success"}
+        open={modalOpen}
+        icon={
+          nameAction.current === "delete" ? "error_outline" : "help_outline"
+        }
+        textButton={nameAction.current === "delete" ? "Excluir" : "Cadastrar"}
+        title={
+          nameAction.current === "delete"
+            ? "deseja apagar o registro?"
+            : "Deseja salvar o registro?"
+        }
+        subTitle={
+          nameAction.current === "delete" ? "excluirá permanentemente" : ""
+        }
+      />
       <Form ref={formRef} onSubmit={handleSubmit}>
         <Box
           component={Paper}
@@ -94,7 +157,7 @@ export const PersonDetail: React.FC = () => {
             <Grid item>
               <Typography variant="h6">Geral</Typography>
             </Grid>
-            <Grid container item direction="row">
+            <Grid container item direction="row" spacing={2}>
               <Grid item xs={12} sm={12} md={6} lg={4} xl={2}>
                 <VTextField
                   name="nome"
@@ -105,14 +168,15 @@ export const PersonDetail: React.FC = () => {
               </Grid>
             </Grid>
 
-            <Grid container item>
+            <Grid container item direction="row" spacing={2}>
               <Grid item xs={12} sm={12} md={8} lg={4} xl={2}>
                 <VTextField name="email" label="Email" fullWidth />
               </Grid>
-            </Grid>
-            <Grid container item>
-              <Grid item xs={12} sm={12} md={8} lg={4} xl={2}>
-                <AutoCompleteCities isExternalLoading={false} />
+
+              <Grid container item>
+                <Grid item xs={12} sm={12} md={8} lg={4} xl={2}>
+                  <AutoCompleteCities />
+                </Grid>
               </Grid>
             </Grid>
           </Grid>
