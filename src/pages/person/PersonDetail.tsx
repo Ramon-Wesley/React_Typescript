@@ -27,10 +27,9 @@ export const PersonDetail: React.FC = () => {
         if (response instanceof Error) {
           navigate("/pessoas");
         } else {
-          setName(response.nome);
           formRef.current?.setData(response);
-          console.log(response.cidadeId);
           console.log(formRef.current?.getData());
+          setName(response.nome);
         }
       });
     } else {
@@ -47,6 +46,7 @@ export const PersonDetail: React.FC = () => {
     nome: string;
     email: string;
   }
+  const saveValue = useRef<IForm>();
 
   const validationInputs: yup.ObjectSchema<IForm> = yup.object().shape({
     cidadeId: yup.number().integer().required(),
@@ -55,23 +55,11 @@ export const PersonDetail: React.FC = () => {
   });
 
   const handleSubmit = useCallback((values: IForm) => {
-    console.log(values);
     validationInputs
       .validate(values, { abortEarly: false })
       .then((response) => {
-        if (id !== "nova") {
-          PersonService.updateById(Number(id), response).then((response) => {
-            if (response instanceof Error) {
-              // ALERT
-            } else {
-              if (IsSaveAndClose()) {
-                navigate("/pessoas");
-              } else {
-                navigate(`/pessoas/detalhe/${id}`);
-              }
-            }
-          });
-        }
+        setModalOpen(true);
+        saveValue.current = response;
       })
       .catch((error: yup.ValidationError) => {
         const errorsResult: Record<string, string> = {};
@@ -81,6 +69,50 @@ export const PersonDetail: React.FC = () => {
         });
         formRef.current?.setErrors(errorsResult);
       });
+  }, []);
+
+  const handleSave = useCallback(() => {
+    if (!saveValue.current) {
+      alert("sem dados");
+    } else {
+      if (id !== "nova") {
+        PersonService.updateById(Number(id), saveValue.current).then(
+          (response) => {
+            if (response instanceof Error) {
+              alert("Erro ao cadastrar");
+            } else {
+              if (IsSaveAndClose()) {
+                navigate("/pessoas", {
+                  state: {
+                    message: "Cadastro realizado com sucesso",
+                    type: "success",
+                  },
+                });
+              } else {
+                alert("Salvo com sucesso!");
+              }
+            }
+          }
+        );
+      } else {
+        PersonService.create(saveValue.current).then((response) => {
+          if (response instanceof Error) {
+            alert("Erro ao salvar");
+          } else {
+            if (IsSaveAndClose()) {
+              navigate(`/pessoas`, {
+                state: {
+                  message: "Cadastro pessoas salvo com sucesso",
+                  type: "success",
+                },
+              });
+            } else {
+              navigate(`/pessoas/detalhe/${response}`);
+            }
+          }
+        });
+      }
+    }
   }, []);
 
   const handleDelete = useCallback((id: number) => {
@@ -98,12 +130,22 @@ export const PersonDetail: React.FC = () => {
   }, []);
 
   const openModal = useCallback((name: TNameAction) => {
-    setModalOpen(true);
     nameAction.current = name;
+    if (name === "save") {
+      save();
+      return;
+    } else if (name === "saveAndClose") {
+      saveAndClose();
+      return;
+    }
+
+    setModalOpen(true);
   }, []);
+
   const closeModal = useCallback(() => {
     setModalOpen(false);
     nameAction.current = undefined;
+    saveValue.current = undefined;
   }, []);
 
   return (
@@ -115,7 +157,7 @@ export const PersonDetail: React.FC = () => {
           onclickSaveAndBack={() => openModal("saveAndClose")}
           onclickDelete={() => openModal("delete")}
           onclickBack={() => navigate("/pessoas")}
-          onclickNew={() => navigate("/pessoas/nova")}
+          onclickNew={() => navigate("/pessoas/detalhe/nova")}
         />
       }
     >
@@ -123,12 +165,12 @@ export const PersonDetail: React.FC = () => {
         handleIsOpen={closeModal}
         handleOnClick={
           nameAction.current === "saveAndClose"
-            ? saveAndClose
+            ? handleSave
             : nameAction.current === "save"
-            ? save
+            ? handleSave
             : nameAction.current === "delete"
-            ? ()=>handleDelete(Number(id))
-            : ()=> undefined
+            ? () => handleDelete(Number(id))
+            : () => undefined
         }
         color={nameAction.current === "delete" ? "warning" : "success"}
         open={modalOpen}

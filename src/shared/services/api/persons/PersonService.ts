@@ -12,7 +12,7 @@ interface IDataCount {
   data: IPersons[];
   totalCount: number;
 }
-export const getAll = async (
+ const getAll = async (
   filter = "",
   page = 1
 ): Promise<IDataCount | Error> => {
@@ -38,7 +38,7 @@ export const getAll = async (
   }
 };
 
-export const deleteById = async (id: number): Promise<void | Error> => {
+const deleteById = async (id: number): Promise<void | Error> => {
   try {
     await api.delete(`/pessoas/${id}`);
   } catch (error) {
@@ -48,7 +48,7 @@ export const deleteById = async (id: number): Promise<void | Error> => {
   }
 };
 
-export const getById = async (id: number): Promise<IPersons | Error> => {
+const getById = async (id: number): Promise<IPersons | Error> => {
   try {
     const { data } = await api.get(`/pessoas/${id}`);
 
@@ -63,7 +63,7 @@ export const getById = async (id: number): Promise<IPersons | Error> => {
   }
 };
 
-export const updateById = async (
+const updateById = async (
   id: number,
   data: Omit<IPersons, "id">
 ): Promise<void | Error> => {
@@ -76,9 +76,23 @@ export const updateById = async (
   }
 };
 
+const create= async(person: Omit<IPersons,'id'>):Promise<number | Error> =>{
+
+  try {
+  const {data}=  await api.post<IPersons>(`/pessoas`,person)
+  if(data) return data.id
+
+  return new Error('Erro ao cadastrar o registro')
+  } catch (error) {
+    return new Error((error as {message:string}).message || 'Erro ao cadastrar o registro!')
+    
+  }
+}
+
 export const PersonService = {
   getAll,
   deleteById,
   getById,
   updateById,
+  create
 };

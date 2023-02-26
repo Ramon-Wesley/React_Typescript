@@ -10,8 +10,8 @@ import {
 interface IDetailTools {
   textNew?: string;
 
-  onclickSave?: () => void;
-  onclickSaveAndBack?: () => void;
+  onclickSave?: () => void | undefined;
+  onclickSaveAndBack?: () => void | undefined;
   onclickBack?: () => void;
   onclickNew?: () => void;
   onclickDelete?: () => void;

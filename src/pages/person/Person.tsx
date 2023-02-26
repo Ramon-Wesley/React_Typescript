@@ -71,12 +71,15 @@ export const People: React.FC = () => {
       });
     }
   }, []);
-  
-  useEffect(() => {
+
+  useEffect(()=>{
     if(location.state){
       setMessageAlert(location.state.message)
       setTypeAlert(location.state.type)
     }
+  },[])
+
+  useEffect(() => {
     if (typeAlert && messageAlert) {
       setTimeout(() => {
         location.state.message=undefined
