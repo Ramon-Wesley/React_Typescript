@@ -1,5 +1,5 @@
 import { useField } from "@unform/core";
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useCallback, useRef } from "react";
 import { UseDebounce } from "../../../shared/hook";
 import { CitiesService } from "../../../shared/services/api/cities/CitiesService";
 import { Autocomplete, TextField, CircularProgress } from "@mui/material";
@@ -20,7 +20,9 @@ export const AutoCompleteCities: React.FC<IAutoCompleteCities> = ({
   const [search, setSearch] = useState("");
   const [selectId, setSelectId] = useState<number | undefined>(defaultValue);
   const [options, setOptions] = useState<TOptionSelected[]>([]);
+  const [optionsGetAll, setOptionsGetAll] = useState<TOptionSelected[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [firstTime, setFirstTime] = useState(false);
   const { debounce } = UseDebounce();
 
   useEffect(() => {
@@ -33,24 +35,42 @@ export const AutoCompleteCities: React.FC<IAutoCompleteCities> = ({
 
   useEffect(() => {
     setIsLoading(true);
-    debounce(() => {
-      CitiesService.getAll(search, 1).then((response) => {
-        setIsLoading(false);
-        if (response instanceof Error) {
-        } else {
-          setOptions(
-            response.data.map((res) => ({ id: res.id, label: res.nome }))
-          );
-        }
+      debounce(() => {
+        if(selectId && selectId > 4 && !firstTime){
+          setIsLoading(true)
+          setFirstTime(true)
+            CitiesService.getById(selectId).then((response)=>{
+              if(response instanceof Error){
+              }else{
+                setIsLoading(false)
+                setOptions([...optionsGetAll,{id:response.id,label:response.nome}])
+              }
+            })
+        }else{
+          CitiesService.getAll(search, 1).then((response) => {
+            setIsLoading(false);
+            if (response instanceof Error) {
+            } else {
+              setIsLoading(false)
+              setOptions(
+                response.data.map((res) => ({ id: res.id, label: res.nome }))
+                );
+                
+              }
+            });
+          }
+
       });
-    });
-  }, [search]);
+    
+    }, [search,selectId]);
+
+  
 
   const autoCompleteValue = useMemo(() => {
-    if (!selectId) return null;
+    if (!selectId) return null;    
     const result = options.find((op) => op.id === selectId);
-    if (result) return result;
-    return null;
+    if (!result) return null;
+    return result;
   }, [selectId, options]);
 
   return (

@@ -1,34 +1,29 @@
 {
   "pessoas": [
+  
     {
-      "id": 0,
-      "nome": "Walsh Singleton",
-      "email": "walshsingleton@genesynk.com",
-      "cidadeId": 4
-    },
-    {
-      "id": 1,
       "nome": "Deirdre Mendoza",
       "email": "deirdremendoza@genesynk.com",
-      "cidadeId": 13
+      "cidadeId": 1,
+      "id": 1
     },
     {
       "nome": "Pauline Tyson",
       "email": "paulinetyson@genesynk.com",
-      "cidadeId": 3,
+      "cidadeId": 1,
       "id": 2
     },
     {
-      "id": 3,
       "nome": "Rebekah Aguilar",
       "email": "rebekahaguilar@genesynk.com",
-      "cidadeId": 12
+      "cidadeId": 5,
+      "id": 3
     },
     {
-      "id": 4,
       "nome": "Hobbs Alford",
       "email": "hobbsalford@genesynk.com",
-      "cidadeId": 13
+      "cidadeId": 2,
+      "id": 4
     },
     {
       "id": 5,
@@ -91,10 +86,10 @@
       "cidadeId": 2
     },
     {
-      "id": 15,
       "nome": "Ferguson Waller",
       "email": "fergusonwaller@genesynk.com",
-      "cidadeId": 19
+      "cidadeId": 3,
+      "id": 15
     },
     {
       "id": 16,
@@ -242,10 +237,6 @@
     }
   ],
   "cidades": [
-    {
-      "id": 0,
-      "nome": "Torboy"
-    },
     {
       "id": 1,
       "nome": "Zortman"

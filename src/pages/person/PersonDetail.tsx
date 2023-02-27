@@ -53,7 +53,6 @@ export const PersonDetail: React.FC = () => {
     nome: yup.string().min(2).required(),
     email: yup.string().email().required(),
   });
-
   const handleSubmit = useCallback((values: IForm) => {
     validationInputs
       .validate(values, { abortEarly: false })
@@ -147,7 +146,7 @@ export const PersonDetail: React.FC = () => {
     nameAction.current = undefined;
     saveValue.current = undefined;
   }, []);
-
+console.log('renderizou!')
   return (
     <LayoutBase
       title={id === "nova" ? "Cadastro de pessoa" : name ? name : ""}
