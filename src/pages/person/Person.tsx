@@ -1,5 +1,6 @@
 import { SearchTools } from "../../shared/components/searchTools/SearchTools";
 import { LayoutBase } from "../../shared/layouts";
+
 import {
   Alert,
   AlertColor,
@@ -21,6 +22,7 @@ import { IPersons, PersonService } from "../../shared/services/api/persons";
 import { UseDebounce } from "../../shared/hook";
 import { Environment } from "../../shared/environment/Environment";
 import { VModal } from "../../shared/components/vModal/VModal";
+import { ComponentsConstants } from "../../shared/components/componentsConstants/ComponentesConstantes";
 
 export const People: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -82,11 +84,9 @@ export const People: React.FC = () => {
   useEffect(() => {
     if (typeAlert && messageAlert) {
       setTimeout(() => {
-        location.state.message=undefined
-        location.state.type=undefined
         setTypeAlert(undefined);
         setMessageAlert(undefined);
-      }, 2000);
+      }, ComponentsConstants.ALERT_TIME);
     }
   }, [typeAlert, messageAlert]);
 
@@ -98,7 +98,8 @@ export const People: React.FC = () => {
       PersonService.getAll(getSearch, getPage).then((response) => {
         setIsLoading(false);
         if (response instanceof Error) {
-          alert(response.message);
+          setMessageAlert(response.message);
+          setTypeAlert('error')
         } else {
           setRows(response.data);
           setCount(response.totalCount);
@@ -121,7 +122,7 @@ export const People: React.FC = () => {
       }
     >
       {typeAlert !== undefined && messageAlert !== undefined && (
-        <Alert severity={typeAlert}>{messageAlert}</Alert>
+        <Alert severity={typeAlert} >{messageAlert}</Alert>
       )}
 
       {open && (

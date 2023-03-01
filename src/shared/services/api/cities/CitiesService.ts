@@ -1,12 +1,12 @@
 import { Environment } from "../../../environment/Environment";
 import { api } from "../axios";
 
-interface ICities {
+export interface ICities {
   id: number;
   nome: string;
 }
 
-interface ICitiesCount {
+export interface ICitiesCount {
   data: ICities[];
   count: number;
 }

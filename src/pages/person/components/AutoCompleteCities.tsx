@@ -1,7 +1,10 @@
 import { useField } from "@unform/core";
 import { useEffect, useState, useMemo, useCallback, useRef } from "react";
 import { UseDebounce } from "../../../shared/hook";
-import { CitiesService } from "../../../shared/services/api/cities/CitiesService";
+import {
+  CitiesService,
+  ICities,
+} from "../../../shared/services/api/cities/CitiesService";
 import { Autocomplete, TextField, CircularProgress } from "@mui/material";
 
 interface IAutoCompleteCities {
@@ -20,7 +23,6 @@ export const AutoCompleteCities: React.FC<IAutoCompleteCities> = ({
   const [search, setSearch] = useState("");
   const [selectId, setSelectId] = useState<number | undefined>(defaultValue);
   const [options, setOptions] = useState<TOptionSelected[]>([]);
-  const [optionsGetAll, setOptionsGetAll] = useState<TOptionSelected[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [firstTime, setFirstTime] = useState(false);
   const { debounce } = UseDebounce();
@@ -33,51 +35,52 @@ export const AutoCompleteCities: React.FC<IAutoCompleteCities> = ({
     });
   }, [registerField, fieldName, selectId]);
 
-  useEffect(() => {
+  const handleSearch = useCallback(async () => {
     setIsLoading(true);
-      debounce(() => {
-        if(selectId && selectId > 4 && !firstTime){
-          setIsLoading(true)
-          setFirstTime(true)
-            CitiesService.getById(selectId).then((response)=>{
-              if(response instanceof Error){
-              }else{
-                setIsLoading(false)
-                setOptions([...optionsGetAll,{id:response.id,label:response.nome}])
+    debounce(() => {
+      try {
+        setIsLoading(true);
+        selectId && selectId > 4 && !firstTime
+          ? CitiesService.getById(selectId).then((response) => {
+              if (response instanceof Error) {
+              } else {
+                setIsLoading(false);
+                setOptions([{ id: response.id, label: response.nome }]);
               }
             })
-        }else{
-          CitiesService.getAll(search, 1).then((response) => {
-            setIsLoading(false);
-            if (response instanceof Error) {
-            } else {
-              setIsLoading(false)
-              setOptions(
-                response.data.map((res) => ({ id: res.id, label: res.nome }))
+          : CitiesService.getAll(search, 1).then((response) => {
+              setIsLoading(false);
+              if (response instanceof Error) {
+              } else {
+                setIsLoading(false);
+                setOptions(
+                  response.data.map((res) => ({ id: res.id, label: res.nome }))
                 );
-                
               }
             });
-          }
+        setFirstTime(true);
+      } catch (error) {
+        console.log(error);
+      }
+    });
+  }, [search, selectId]);
 
-      });
-    
-    }, [search,selectId]);
-
-  
+  useEffect(() => {
+    handleSearch();
+  }, [handleSearch]);
 
   const autoCompleteValue = useMemo(() => {
-    if (!selectId) return null;    
-    const result = options.find((op) => op.id === selectId);
-    if (!result) return null;
-    return result;
+    return selectId ? options.find((op) => op.id === selectId) : null;
   }, [selectId, options]);
 
   return (
     <Autocomplete
       loadingText="Carregando..."
       loading={isLoading}
-      popupIcon={isLoading ? <CircularProgress size={26} /> : ""}
+      disabled={isExternalLoading}
+      popupIcon={
+        isLoading || isExternalLoading ? <CircularProgress size={26} /> : ""
+      }
       openText="Abrir"
       closeText="Fechar"
       noOptionsText="Sem opções"

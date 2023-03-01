@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { DetailsTools } from "../../shared/components/detailsTools/DetailsTools";
 import { LayoutBase } from "../../shared/layouts";
-import { Box, Grid, Paper, Typography } from "@mui/material";
+import { Alert, AlertColor, Box, Grid, Paper, Typography } from "@mui/material";
 import { IPersons, PersonService } from "../../shared/services/api/persons";
 import { VTextField } from "../../shared/form/VTextField";
 import { UseVForm } from "../../shared/form/UseVForm";
@@ -10,50 +10,44 @@ import { Form } from "@unform/web";
 import * as yup from "yup";
 import { AutoCompleteCities } from "./components/AutoCompleteCities";
 import { VModal } from "../../shared/components/vModal/VModal";
+import { ComponentsConstants } from "../../shared/components/componentsConstants/ComponentesConstantes";
 
 export const PersonDetail: React.FC = () => {
   type TNameAction = "save" | "saveAndClose" | "delete" | undefined;
-
+  interface IForm extends Omit<IPersons, "id"> {}
   const { id = "nova" } = useParams<"id">();
   const [name, setName] = useState<string>();
   const [modalOpen, setModalOpen] = useState(false);
   const nameAction = useRef<TNameAction>();
   const { save, IsSaveAndClose, saveAndClose, formRef } = UseVForm();
   const navigate = useNavigate();
+  const saveValue = useRef<IForm>();
+  const [typeAlert, setTypeAlert] = useState<AlertColor>();
+  const [messageAlert, setMessageAlert] = useState<string>();
 
-  useEffect(() => {
-    if (id !== "nova") {
-      PersonService.getById(Number(id)).then((response) => {
-        if (response instanceof Error) {
-          navigate("/pessoas");
-        } else {
-          formRef.current?.setData(response);
-          console.log(formRef.current?.getData());
-          setName(response.nome);
-        }
-      });
-    } else {
-      formRef.current?.setData({
-        nome: "",
-        email: "",
-        cidadeId: undefined,
-      });
-    }
+  const renderInfo = useCallback(async () => {
+    const result = id !== "nova" && (await PersonService.getById(Number(id)));
+    result instanceof Error
+      ? navigate("/pessoas")
+      : typeof result === "boolean"
+      ? formRef.current?.setData({
+          nome: "",
+          email: "",
+          cidadeId: undefined,
+        })
+      : formRef.current?.setData(result) && setName(result.nome);
   }, [id]);
 
-  interface IForm {
-    cidadeId: number;
-    nome: string;
-    email: string;
-  }
-  const saveValue = useRef<IForm>();
+  useEffect(() => {
+    renderInfo();
+  }, [renderInfo]);
 
   const validationInputs: yup.ObjectSchema<IForm> = yup.object().shape({
     cidadeId: yup.number().integer().required(),
     nome: yup.string().min(2).required(),
     email: yup.string().email().required(),
   });
-  const handleSubmit = useCallback((values: IForm) => {
+  const validateForm = useCallback((values: IForm) => {
     validationInputs
       .validate(values, { abortEarly: false })
       .then((response) => {
@@ -72,23 +66,25 @@ export const PersonDetail: React.FC = () => {
 
   const handleSave = useCallback(() => {
     if (!saveValue.current) {
-      alert("sem dados");
+      setTypeAlert("error");
+      setMessageAlert("Sem dados válidos");
     } else {
       if (id !== "nova") {
         PersonService.updateById(Number(id), saveValue.current).then(
           (response) => {
             if (response instanceof Error) {
-              alert("Erro ao cadastrar");
+              setTypeAlert("error");
+              setMessageAlert(ComponentsConstants.MESSAGE_ERROR_REGISTRATION);
             } else {
               if (IsSaveAndClose()) {
                 navigate("/pessoas", {
                   state: {
-                    message: "Cadastro realizado com sucesso",
+                    message: ComponentsConstants.MESSAGE_SUCCESS_REGISTRATION,
                     type: "success",
                   },
                 });
               } else {
-                alert("Salvo com sucesso!");
+                closeModal();
               }
             }
           }
@@ -96,12 +92,13 @@ export const PersonDetail: React.FC = () => {
       } else {
         PersonService.create(saveValue.current).then((response) => {
           if (response instanceof Error) {
-            alert("Erro ao salvar");
+            setTypeAlert("error");
+            setMessageAlert(ComponentsConstants.MESSAGE_ERROR_REGISTRATION);
           } else {
             if (IsSaveAndClose()) {
               navigate(`/pessoas`, {
                 state: {
-                  message: "Cadastro pessoas salvo com sucesso",
+                  message: ComponentsConstants.MESSAGE_SUCCESS_REGISTRATION,
                   type: "success",
                 },
               });
@@ -118,11 +115,17 @@ export const PersonDetail: React.FC = () => {
     PersonService.deleteById(id).then((response) => {
       if (response instanceof Error) {
         navigate("/pessoas", {
-          state: { message: "Erro ao excluir o registro!", type: "error" },
+          state: {
+            message: ComponentsConstants.MESSAGE_ERROR_DELETE,
+            type: "error",
+          },
         });
       } else {
         navigate("/pessoas", {
-          state: { message: "Cadastro excluído com sucesso!", type: "success" },
+          state: {
+            message: ComponentsConstants.MESSAGE_SUCCESS_DELETE,
+            type: "success",
+          },
         });
       }
     });
@@ -133,7 +136,8 @@ export const PersonDetail: React.FC = () => {
     if (name === "save") {
       save();
       return;
-    } else if (name === "saveAndClose") {
+    }
+    if (name === "saveAndClose") {
       saveAndClose();
       return;
     }
@@ -146,7 +150,7 @@ export const PersonDetail: React.FC = () => {
     nameAction.current = undefined;
     saveValue.current = undefined;
   }, []);
-console.log('renderizou!')
+
   return (
     <LayoutBase
       title={id === "nova" ? "Cadastro de pessoa" : name ? name : ""}
@@ -160,6 +164,10 @@ console.log('renderizou!')
         />
       }
     >
+      {typeAlert !== undefined && messageAlert !== undefined && (
+        <Alert severity={typeAlert}>{messageAlert}</Alert>
+      )}
+
       <VModal
         handleIsOpen={closeModal}
         handleOnClick={
@@ -186,7 +194,7 @@ console.log('renderizou!')
           nameAction.current === "delete" ? "excluirá permanentemente" : ""
         }
       />
-      <Form ref={formRef} onSubmit={handleSubmit}>
+      <Form ref={formRef} onSubmit={validateForm}>
         <Box
           component={Paper}
           margin={1}

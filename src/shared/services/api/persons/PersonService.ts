@@ -17,7 +17,7 @@ interface IDataCount {
   page = 1
 ): Promise<IDataCount | Error> => {
   try {
-    const urlGetAll = `/pessoas?_page=${page}&_limit=${Environment.LINES_LIMITS}&nome_like=${filter}`;
+    const urlGetAll = `/pessoas?_page=${page}&_limit=${Environment.LINES_LIMITS}&_order=desc&nome_like=${filter}`;
 
     const { data, headers } = await api.get(urlGetAll);
 
