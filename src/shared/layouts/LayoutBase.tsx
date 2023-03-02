@@ -26,7 +26,7 @@ export const LayoutBase: React.FC<ILayoutBase> = ({
   const mdDown = useMediaQuery(() => theme.breakpoints.down("md"));
   const { handleToggleOpen } = useDrawerContext();
   return (
-    <Box display="flex" flexDirection="column" padding={1}>
+    <Box display="flex" flexDirection="column" padding={1} gap={2}>
       <Box display="flex" gap={2} alignItems="center">
         {smDown && (
           <IconButton onClick={handleToggleOpen}>

@@ -1,22 +1,16 @@
 {
   "pessoas": [
     {
-      "nome": "Rebekah Aguilar",
-      "email": "rebekahaguilar@genesynk.com",
-      "cidadeId": 5,
-      "id": 3
-    },
-    {
       "nome": "jhdsjhdsjkd",
       "email": "dsjkndjds@hotmail.com",
       "cidadeId": 3,
       "id": 5
     },
     {
-      "id": 6,
       "nome": "Hope Kane",
       "email": "hopekane@genesynk.com",
-      "cidadeId": 18
+      "cidadeId": 18,
+      "id": 6
     },
     {
       "id": 7,
