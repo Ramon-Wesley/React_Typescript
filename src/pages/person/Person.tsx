@@ -48,7 +48,6 @@ export const People: React.FC = () => {
   const openModal = useCallback((id: number) => {
     setOpen(true);
     idResult.current = id;
-    console.log(idResult.current);
   }, []);
   
   const closeModal = useCallback(() => {
@@ -114,13 +113,16 @@ export const People: React.FC = () => {
       tools={
         <SearchTools
           textButton="Nova"
+          onclickButton={()=>navigate('/pessoas/detalhe/nova')}
           onchangeInput={(e) =>
             setSearchParams({ busca: e, pagina: "1" }, { replace: true })
           }
           valueTextInput={searchParams.get("busca") ?? ""}
         />
       }
+
     >
+
       {typeAlert !== undefined && messageAlert !== undefined && (
         <Alert severity={typeAlert} >{messageAlert}</Alert>
       )}

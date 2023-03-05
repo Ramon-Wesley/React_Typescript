@@ -12,7 +12,7 @@ import {
   ListItemText,
 } from "@mui/material";
 import { useMatch, useResolvedPath, useNavigate } from "react-router-dom";
-import { useDrawerContext, useThemeContextOption } from "../../context";
+import { useAuthContext, useDrawerContext, useThemeContextOption } from "../../context";
 interface IListApp {
   path: string;
   icon: string;
@@ -47,6 +47,7 @@ export const DrawerApp: React.FC<IDrawerApp> = ({ children }) => {
   const smDown = useMediaQuery(() => theme.breakpoints.down("sm"));
   const { handleToggleOpen, isOpen, options } = useDrawerContext();
   const { toggleTheme } = useThemeContextOption();
+  const {logout}=useAuthContext()
   return (
     <>
       <Drawer
@@ -91,9 +92,16 @@ export const DrawerApp: React.FC<IDrawerApp> = ({ children }) => {
             <List>
               <ListItemButton onClick={toggleTheme}>
                 <ListItemIcon>
-                  <Icon>theme</Icon>
+                  <Icon>dark_mode</Icon>
                 </ListItemIcon>
                 <ListItemText primary="Trocar tema" />
+              </ListItemButton>
+              
+              <ListItemButton onClick={logout}>
+                <ListItemIcon>
+                  <Icon>logout</Icon>
+                </ListItemIcon>
+                <ListItemText primary="Sair" />
               </ListItemButton>
             </List>
           </Box>
