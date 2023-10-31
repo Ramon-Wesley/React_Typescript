@@ -46,6 +46,7 @@ if (isAuthenticated) {
 }
     return(
 
+        <Box width="100vw" height="100vh">
         <Box display='flex' alignItems='center' justifyContent='center' width='100%' height='100%'>
             <Card>
                     <CardContent>
@@ -79,6 +80,7 @@ if (isAuthenticated) {
                     </Box>
                         </CardActions>
             </Card>
+        </Box>
         </Box>
     )
 }
