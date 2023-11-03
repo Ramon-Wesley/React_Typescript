@@ -38,12 +38,13 @@ export const TabelaProduto:React.FC<ITabela>=({isLoading=false,rows=[],handleDel
     setOpen(true);
     idResult.current = id;
   }, []);
-  
+
+
   const closeModal = async() => {
     setOpen(false);
     idResult.current = undefined;
   };
-const deletarRegistro=async(id:number)=>{
+const deletarRegistro=(id:number)=>{
   setOpen(false)
   handleDelete(id)
 }
@@ -57,7 +58,7 @@ const deletarRegistro=async(id:number)=>{
         <VModal
           open={open}
           handleIsOpen={closeModal}
-          handleOnClick={()=>{deletarRegistro(idResult.current ?? 0) }}
+          handleOnClick={()=>{deletarRegistro(idResult.current ? idResult.current : 0 ) }}
           icon="error_outline"
           color="warning"
           textButton="Excluir"

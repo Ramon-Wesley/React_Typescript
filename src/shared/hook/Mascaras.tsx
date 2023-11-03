@@ -3,7 +3,9 @@ const CpfRegex = (cpf:string) => {
 }
 
 const TelefoneRegex = (telefone:string) => {
-  return telefone.replace(/(\d{2})(\d{5})(\d{4})/g, '($1) $2-$3');
+
+    return telefone.replace(/(\d{2})(\d{5})(\d{4})/g, '($1) $2-$3');
+  
 }
 
 

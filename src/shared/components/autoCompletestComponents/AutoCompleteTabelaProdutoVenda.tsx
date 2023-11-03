@@ -31,7 +31,6 @@ export const AutoCompleteTabelaProdutoVenda: React.FC<IAutoCompleteCities> = ({
   const [options, setOptions] = useState<TOptionSelected[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [quantidade,setQuantidade]=useState(1);
-  const [precoUnitario,setPrecoUnitario]=useState(0);
   const [precoTotal,setPrecoTotal]=useState(0);
   const [valorTotalProdutos,setValorTotalProdutos]=useState(0)
   const { debounce } = UseDebounce();
@@ -42,52 +41,70 @@ export const AutoCompleteTabelaProdutoVenda: React.FC<IAutoCompleteCities> = ({
       getValue: () => optionsTable,
       setValue: (_, newValue) => setOptionsTable(newValue ),
     });
-  }, [registerField, fieldName, optionsTable]);
-
-  const handleDelete=(idNumber:number)=>{
-    console.log(idNumber)
-    optionsTable.filter((e,index)=>{
-      if (e.produto_id === idNumber){
-      optionsTable.splice(index,1)
-      optionsTableDelete[e.produto_id]=e.quantidade;
-     
-    }})
-    const totalValue=optionsTable.reduce((total,value)=>{return total+value.valor},0)
-    setValorTotalProdutos(totalValue)
-  }
+     }, [registerField, fieldName, optionsTable]);
  
+ // const handleDelete=useCallback((idNumber:number)=>{
+ 
+   // optionsTable.filter((e)=>{
+     // if (e.produto_id === idNumber){
+     // optionsTableDelete[e.produto_id]=e.quantidade;
+   // }})
+
+   // setOptionsTable((e)=>{
+     // return e.filter((f)=> f.produto_id !== idNumber)
+    // })
+
+   // const totalValue=optionsTable.reduce((total,value)=>{return total+value.valor},0)
+    //setValorTotalProdutos(totalValue)
   
-  const addServicos = () => {
-    if (autoCompleteValue?.id && autoCompleteValue.nome) {
-      console.log(optionsTable)
+ // },[])
+ const handleDelete=(idNumber:number)=>{
+   console.log("idNumber"+idNumber)
+   let totalValue=0
+  optionsTable.forEach((e,index)=>{
+     if (e.produto_id === idNumber){
+     optionsTableDelete[e.produto_id]=e.quantidade;
+   } else{
+    totalValue+=e.valor
+  
+  }  
+})
+setOptionsTable((e)=>{
+  return e.filter((f)=> f.produto_id !== idNumber)
+})
+setValorTotalProdutos(totalValue)
+
+  
+
+  
+}
+  
+  
+const addServicos = () => {
+    if (autoCompleteValue?.id && autoCompleteValue.nome && !optionsTable?.find((e) => e.produto_id === autoCompleteValue.produto_id)) {
+     
       const newOption = {
         id: autoCompleteValue.id,
         produto_id: autoCompleteValue.id,
         nome: autoCompleteValue.nome,
         valor: precoTotal,
-        valorUnitario: precoUnitario,
+        valorUnitario: autoCompleteValue.valor,
         quantidade: quantidade,
       };
   
       let newOptionsTable;
-      if (optionsTable.length > 0) {
-        if (optionsTable.find((e) => e.produto_id === autoCompleteValue.produto_id)) {
-          return; 
-        }else{
+      if (optionsTable && optionsTable.length > 0) {
           newOptionsTable = [...optionsTable, newOption];
-        }
-        
       } else {
         newOptionsTable = [newOption];
       }
   
       const total = newOptionsTable.reduce((cont, value) => cont + value.valor, 0);
-  
+      console.log(newOptionsTable)
       setOptionsTable(newOptionsTable);
       setValorTotalProdutos(total);
       setSelect({ nome: "", id: undefined, produto_id:0,quantidade:0,valor:0});
       setQuantidade(1);
-      setPrecoUnitario(0);
       setPrecoTotal(0);
     }
   };
@@ -96,7 +113,7 @@ export const AutoCompleteTabelaProdutoVenda: React.FC<IAutoCompleteCities> = ({
     if(autoCompleteValue?.valor){
       setPrecoTotal(autoCompleteValue?.valor * quantidade)
     }
-  },[quantidade,precoUnitario])
+  },[quantidade])
 
   const handleSearch = useCallback( () => {
     setIsLoading(true);
@@ -142,7 +159,7 @@ export const AutoCompleteTabelaProdutoVenda: React.FC<IAutoCompleteCities> = ({
     }
 
     setQuantidade(1);
-    setPrecoUnitario(0);
+
     setPrecoTotal(0);
     return select ? options.find((op) => op.id === select.id) : null;
     
@@ -257,7 +274,8 @@ export const AutoCompleteTabelaProdutoVenda: React.FC<IAutoCompleteCities> = ({
           inputProps={{
             min: 0
           }}
-            value={autoCompleteValueTotal}          
+            value={valorTotalProdutos}
+                      
           />
         </Grid>
       </>

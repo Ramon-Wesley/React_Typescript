@@ -57,6 +57,12 @@ export const FuncionarioDetail: React.FC = () => {
   
   }, [id]);
 
+  useEffect(()=>{
+    setTimeout(()=>{
+      setMessageAlert(undefined)
+      setTypeAlert(undefined)
+    },2000)
+  },[messageAlert,typeAlert])
 
   const cepInfo=(async(cep:string)=>{
       if(cep.length === 8){
@@ -146,7 +152,8 @@ export const FuncionarioDetail: React.FC = () => {
           (response) => {
             if (response instanceof Error) {
               setTypeAlert("error");
-              setMessageAlert(ComponentsConstants.MESSAGE_ERROR_REGISTRATION);
+              setMessageAlert(response.message);
+              closeModal()
             } else {
               if (IsSaveAndClose()) {
                 navigate("/funcionarios", {
@@ -165,7 +172,8 @@ export const FuncionarioDetail: React.FC = () => {
         FuncionarioService.create(saveValue.current).then((response) => {
           if (response instanceof Error) {
             setTypeAlert("error");
-            setMessageAlert(ComponentsConstants.MESSAGE_ERROR_REGISTRATION);
+            setMessageAlert(response.message);
+            closeModal()
           } else {
             if (IsSaveAndClose()) {
               navigate(`/funcionarios`, {

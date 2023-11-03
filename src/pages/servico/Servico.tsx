@@ -112,7 +112,7 @@ export const Servico
 
   return (
     <LayoutBase
-      title="Clientes"
+      title="Servicos"
       tools={
         <SearchTools
           textButton="Nova"

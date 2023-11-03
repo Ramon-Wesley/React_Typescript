@@ -19,6 +19,7 @@ import { AutoCompleteFornecedor } from "../../shared/components/autoCompletestCo
 import { AutoCompleteFuncionario } from "../../shared/components/autoCompletestComponents/AutoCompleteFuncionario";
 import { AutoCompleteProduto } from "../../shared/components/autoCompletestComponents/AutoCompleteProduto";
 import { AutoCompleteTabelaProdutoCompra } from "../../shared/components/autoCompletestComponents/AutoCompleteTabelaProdutoCompra";
+import { ConnectingAirportsOutlined } from "@mui/icons-material";
 
 
 
@@ -42,6 +43,7 @@ export const ComprasDetail: React.FC = () => {
     const result = id !== "nova" && (await ComprasService.getById(Number(id)));
   
       if(result instanceof Error){
+        console.log("skjsk"+result.message)
         navigate("/compras")
       }else if(typeof result === "boolean"){
         formRef.current?.setData({
@@ -53,7 +55,9 @@ export const ComprasDetail: React.FC = () => {
          })
       }else{
         formRef.current?.setData(result) 
-       // setName(result.fornecedor.nome);
+
+      result.produtosCompras.forEach((e)=>console.log("OLHE"+e.quantidade))
+     
       }
   }, [id]);
 
@@ -71,22 +75,29 @@ export const ComprasDetail: React.FC = () => {
   });
   
   const validateForm = useCallback((values: IForm) => {
-  console.log(values)
-  setModalOpen(true);
-  saveValue.current = values;
     validationInputs
     .validate(values, { abortEarly: false })
     .then((response) => {
+      setModalOpen(true);
+      saveValue.current = response;
       })
       .catch((error: yup.ValidationError) => {
         const errorsResult: Record<string, string> = {};
         error.inner.forEach((err) => {
           if (err.path === undefined) return;
           errorsResult[err.path] = err.message;
+          console.log(err.message)
         });
         formRef.current?.setErrors(errorsResult);
       });
   }, []);
+
+  useEffect(()=>{
+    setTimeout(()=>{
+      setMessageAlert(undefined)
+      setTypeAlert(undefined)
+    },2000)
+  },[messageAlert,typeAlert])
 
   const handleSave = useCallback(() => {
     if (!saveValue.current) {
@@ -99,6 +110,7 @@ export const ComprasDetail: React.FC = () => {
             if (response instanceof Error) {
               setTypeAlert("error");
               setMessageAlert("erro de cadastro:"+response.message);
+              closeModal()
             } else {
               if (IsSaveAndClose()) {
                 navigate("/compras", {
@@ -118,6 +130,7 @@ export const ComprasDetail: React.FC = () => {
           if (response instanceof Error) {
             setTypeAlert("error");
             setMessageAlert("erro de create:"+response.message);
+            closeModal()
           } else {
             if (IsSaveAndClose()) {
               navigate(`/compras`, {

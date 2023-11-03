@@ -69,12 +69,14 @@ const create=async(agendamento:Omit<IAgendamento,"id">):Promise<IAgendamento | E
 const updateById=async(id:number,agendamento:Omit<IAgendamento,"id">):Promise<IAgendamento | Error>=>{
   try {
     const funcionario =await FuncionarioService.getById(agendamento.funcionario_id)
-    if(funcionario instanceof Error){}else{
+    if(funcionario instanceof Error){}
+    else{
       const cliente =await PersonService.getById(agendamento.cliente_id)
       if(cliente instanceof Error){}{
         const animal=await animalService.getById(agendamento.animal_id)
 
-        if(animal instanceof Error){}{
+        if(animal instanceof Error){}
+        {
 
           const {data}=await api.put(`/agendamentos/${id}`,agendamento);
           if(data){

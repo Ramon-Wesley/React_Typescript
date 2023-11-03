@@ -23,11 +23,7 @@ export const AppRoutes = () => {
 
   useEffect(() => {
     handleOptions([
-      {
-        icon: "home",
-        label: "Pagina inicial",
-        path: "/pagina-inicial",
-      },
+     
       {
         icon: "person2",
         label: "Clientes",
@@ -83,7 +79,6 @@ export const AppRoutes = () => {
 
   return (
     <Routes>
-      <Route path="/pagina-inicial" element={<Dashboard />} />
       <Route path="/pessoas" element={<People />} />
       <Route path="/fornecedores" element={<Fornecedor />} />
       <Route path="/compras" element={<Compras />} />
@@ -96,7 +91,7 @@ export const AppRoutes = () => {
       <Route path="/estoques/detalhe/:id" element={<EstoqueDetail />} />
       <Route path="/fornecedores/detalhe/:id" element={<FornecedorDetail />} />
       <Route path="/funcionarios/detalhe/:id" element={<FuncionarioDetail />} />
-      <Route path='*' element={<Navigate to='/pagina-inicial'/>}/>
+      <Route path='*' element={<Navigate to='/pessoas'/>}/>
       <Route path="/animais/detalhe/:id" element={<AnimalDetail/>}/>
       <Route path="/animais" element={<Animais/>}/>
       <Route path="/servicos" element={<Servico/>}/>

@@ -2,7 +2,7 @@ import { Estoque } from './../../../../pages/estoque/Estoque';
 import { Fornecedor } from './../../../../pages/fornecedores/Fornecedores';
 import { Environment } from '../../../environment/Environment';
 import { api } from '../axios';
-import { PersonService } from '../cliente';
+import { IErrors, PersonService } from '../cliente';
 import { EstoqueService, IEstoques } from '../estoque/EstoqueService';
 import { FornecedorService, IFornecedores } from '../fornecedor/FornecedorService';
 import { FuncionarioService, IFuncionarios } from '../funcionarios/FuncionariosService';
@@ -22,6 +22,10 @@ export interface IProdutosCompras{
 }
 let produtoEstoque:IEstoques[]=[];
 
+export interface Errors{
+errors:[]
+}
+
 export interface ICompra{
     id:number;
     fornecedor_id: number;
@@ -31,23 +35,13 @@ export interface ICompra{
     produtosCompras:IProdutosCompras[]
 }
 
-
-
 export interface ICompraResult{
     id: number,
     funcionario_id: number,
     fornecedor_id: number,
     data: string,
     valorTotal: number,
-    produtosCompras: [
-      {
-        compra_id: number,
-        produto_id: number,
-        quantidade: number,
-        valorUnitario: number,
-        valor: number
-      }
-    ],
+    produtosCompras:IProdutosCompras[],
     fornecedor: {
       id: number,
       cnpj: string,
@@ -71,7 +65,6 @@ export interface ICompraResult{
 
 }
 
-
 interface IDataCount {
   data:ICompraResult[]
   totalCount:number;
@@ -80,30 +73,36 @@ interface IDataCount {
 
 const create=async(compras:Omit<ICompra,"id">):Promise<ICompra | Error>=>{
    
-   try {
-    const {data}=await api.post("/compras",compras)
-    if(data){
-        return data as ICompra
-    }
-    return new Error ("Erro ao salvar compra")
-   } catch (error) {
-    return new Error("Erro ao salvar registro!")
-   }
+  
+    return api.post("/compras",compras).then((response) => {
+      const data = response.data;
+      console.log(data)
+      if (data.hasOwnProperty('errors')) {
+        const res=data as IErrors
+        return new Error(res.response.data.errors[0])
+      } else {
+        return data.id;
+      }
+    }).catch((err:IErrors) => {
+      return new Error(err.response.data.errors[0])
+    });
 }
 
 const getById=async(id:number):Promise<ICompraResult | Error>=>{
 
     try {
-        const {data}=await api.get(`/compras/${id}`)
-        
-        if(data){
-          const indice=data.data.indexOf("T")
-          data.data=data.data.substring(0,indice)
-            return data 
-        }
-        return new Error("Venda nao encontrado!")
+    
+    const {data,status}= await  api.get<ICompraResult>(`/compras/${id}`)
+    
+    if(data){
+      const indice=data.data.indexOf("T")
+      data.data=data.data.substring(0,indice)
+      return data
+    }
+  
+      return new Error ("Erro ao buscar o compra"+status)
     } catch (error) {
-        return new Error ("Erro ao buscar o compra")
+        return new Error ("Erro ao buscar o compra"+error)
     }
 }
 
@@ -117,15 +116,19 @@ const deleteById=async(id:number):Promise<void |Error>=>{
 
 
 const updateById=async(id:number,compras:Omit<ICompra,"id">,valorAnterior:number[]):Promise<ICompra | Error>=>{
-   try {
-    const {data}=await api.put(`/compras/${id}`,compras)
-    if(data){
-        return data as ICompra
-    }
-    return new Error("Venda nao encontrado!")
-   } catch (error) {
-    return new Error("Erro ao atualizar registro!")
-   }
+
+return api.put(`/compras/${id}`,compras).then((response) => {
+      const data = response.data;
+      console.log(data)
+      if (data.hasOwnProperty('errors')) {
+        const res=data as IErrors
+        return new Error(res.response.data.errors[0])
+      } else {
+        return data.id;
+      }
+    }).catch((err:IErrors) => {
+      return new Error(err.response.data.errors[0])
+    });
 }
 
 

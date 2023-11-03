@@ -22,7 +22,13 @@ export interface IPersons {
       numero?: string
     }
 }
-
+export interface IErrors{
+  response:{
+    data:{
+    errors:string[]
+    }
+  }
+  }
 interface IDataCount {
   data:IPersons[];
   totalCount:number;
@@ -98,26 +104,39 @@ const updateById = async (
   id: number,
   data: Omit<IPersons, "id">
 ): Promise<void | Error> => {
-  try {
-    const result = await api.put(`/clientes/${id}`, data);
-  } catch (error) {
-    return new Error(
-      (error as { message: string }).message || "Erro ao atualizar o registro!"
-    );
-  }
+   return api.put(`/clientes/${id}`, data)
+    .then((response) => {
+      const data = response.data;
+      console.log(data)
+      if (data.hasOwnProperty('errors')) {
+        const res=data as IErrors
+        return new Error(res.response.data.errors[0])
+      } else {
+        return data.id;
+      }
+    }).catch((err:IErrors) => {
+      return new Error(err.response.data.errors[0])
+    })
 };
 
 const create= async(person: Omit<IPersons,'id'>):Promise<number | Error> =>{
 
-  try {
-  const {data}=  await api.post<IPersons>(`/clientes/`,person)
-  if(data) return data.id
+   return api.post(`/clientes/`, person)
+    .then((response) => {
+      const data = response.data;
+      console.log(data)
+      if (data.hasOwnProperty('errors')) {
+        const res=data as IErrors
+        return new Error(res.response.data.errors[0])
+      } else {
+        return data.id;
+      }
+    }).catch((err:IErrors) => {
+      return new Error(err.response.data.errors[0])
+    });
 
-  return new Error('Erro ao cadastrar o registro')
-  } catch (error) {
-    return new Error((error as {message:string}).message || 'Erro ao cadastrar o registro!')
-    
-  }
+
+ 
 }
 
 export const PersonService = {

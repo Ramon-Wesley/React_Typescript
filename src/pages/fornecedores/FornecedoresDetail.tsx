@@ -100,10 +100,17 @@ export const FornecedorDetail: React.FC = () => {
     renderInfo();
   }, [renderInfo]);
 
+  useEffect(()=>{
+    setTimeout(()=>{
+      setMessageAlert(undefined)
+      setTypeAlert(undefined)
+    },2000)
+  },[messageAlert,typeAlert])
+
   const validationInputs: yup.ObjectSchema<IForm> = yup.object().shape({
     nome: yup.string().min(2).required(),
     email: yup.string().email().required(),
-    cnpj:yup.string().min(11).max(11).required(),
+    cnpj:yup.string().min(11).max(19).required(),
     sexo:yup.string().oneOf(["feminino","masculino","outros"]).required(),
     data_de_nascimento:yup.string().required(),
     telefone:yup.string().required(),
@@ -146,7 +153,8 @@ export const FornecedorDetail: React.FC = () => {
           (response) => {
             if (response instanceof Error) {
               setTypeAlert("error");
-              setMessageAlert(ComponentsConstants.MESSAGE_ERROR_REGISTRATION);
+              setMessageAlert(response.message);
+              closeModal()
             } else {
               if (IsSaveAndClose()) {
                 navigate("/fornecedores", {
@@ -165,7 +173,8 @@ export const FornecedorDetail: React.FC = () => {
         FornecedorService.create(saveValue.current).then((response) => {
           if (response instanceof Error) {
             setTypeAlert("error");
-            setMessageAlert(ComponentsConstants.MESSAGE_ERROR_REGISTRATION);
+            setMessageAlert(response.message);
+            closeModal()
           } else {
             if (IsSaveAndClose()) {
               navigate(`/fornecedores`, {

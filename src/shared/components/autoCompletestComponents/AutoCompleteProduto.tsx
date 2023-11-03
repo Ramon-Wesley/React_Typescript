@@ -53,7 +53,7 @@ export const AutoCompleteProduto: React.FC<IAutoCompleteCities> = ({
 
   useEffect(() => {
     handleSearch();
-  }, [select,search]);
+  }, [search]);
 
   const autoCompleteValue = useMemo(() => {
     return select ? options.find((op) => op.id === select.id) : null;

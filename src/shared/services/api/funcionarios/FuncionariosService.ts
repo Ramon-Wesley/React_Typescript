@@ -1,6 +1,7 @@
 import { Environment } from "../../../environment/Environment";
 import { IEndereco } from "../Cep/CepService";
 import { api } from "../axios";
+import { IErrors } from "../cliente";
 
 export interface IFuncionarios {
   id: number;
@@ -93,26 +94,35 @@ const updateById = async (
   id: number,
   data: Omit<IFuncionarios, "id">
 ): Promise<void | Error> => {
-  try {
-    const result = await api.put(`/funcionarios/${id}`, data);
-  } catch (error) {
-    return new Error(
-      (error as { message: string }).message || "Erro ao atualizar o registro!"
-    );
-  }
+
+    return api.put(`/funcionarios/${id}`, data).then((response) => {
+      const data = response.data;
+      if (data.hasOwnProperty('errors')) {
+        const res=data as IErrors
+        return new Error(res.response.data.errors[0])
+      } else {
+        return data.id;
+      }
+    }).catch((err:IErrors) => {
+      return new Error(err.response.data.errors[0])
+    });
 };
 
 const create= async(person: Omit<IFuncionarios,'id'>):Promise<number | Error> =>{
 
-  try {
-  const {data}=  await api.post<IFuncionarios>(`/funcionarios/`,person)
-  if(data) return data.id
 
-  return new Error('Erro ao cadastrar o registro')
-  } catch (error) {
-    return new Error((error as {message:string}).message || 'Erro ao cadastrar o registro!')
-    
-  }
+  return api.post(`/funcionarios/`,person).then((response) => {
+    const data = response.data;
+    console.log(data)
+    if (data.hasOwnProperty('errors')) {
+      const res=data as IErrors
+      return new Error(res.response.data.errors[0])
+    } else {
+      return data.id;
+    }
+  }).catch((err:IErrors) => {
+    return new Error(err.response.data.errors[0])
+  });
 }
 
 export const FuncionarioService = {

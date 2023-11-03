@@ -26,7 +26,7 @@ interface IRodape{
  margin:number[]
 }
 
-interface IDataCount {
+export interface IDataCountPdf {
     data: IPdf[] 
     totalCount: {count:number};
   }
@@ -37,7 +37,7 @@ export type TTipo="compras"| "vendas"
 export const createPdf= async(datas:valueSearch,tipos:TTipo,link:TLink):Promise<pdfMake.TCreatedPdf | Error> =>{
 
     try {
-    const {data}=  await api.post<IDataCount>(`/${tipos}/${link}`,datas)
+    const {data}=  await api.post<IDataCountPdf>(`/${tipos}/${link}`,datas)
     console.log(data)
     if(data) {
         (<any>pdfMake).vfs = pdfFonts.pdfMake.vfs;

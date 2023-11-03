@@ -94,6 +94,9 @@ const changeComplemento=async(e:string)=>{
     <TextField name="cep" label="Cep*" fullWidth 
     onChange={(e)=>setCep(e.target.value)}
     value={cep}
+    inputProps={{
+      min:8
+    }}
     focused
     />
     </Grid>

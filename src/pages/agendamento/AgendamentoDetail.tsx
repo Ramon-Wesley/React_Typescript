@@ -133,6 +133,13 @@ export const AgendamentoDetail: React.FC = () => {
       });
   }, []);
 
+  useEffect(()=>{
+    setTimeout(()=>{
+      setMessageAlert(undefined)
+      setTypeAlert(undefined)
+    },2000)
+  },[messageAlert,typeAlert])
+
   const handleSave = useCallback(() => {
     if (!saveValue.current) {
       setTypeAlert("error");
@@ -144,6 +151,7 @@ export const AgendamentoDetail: React.FC = () => {
           (response) => {
             if (response instanceof Error) {
               setTypeAlert("error");
+              closeModal()
               setMessageAlert(ComponentsConstants.MESSAGE_ERROR_REGISTRATION);
             } else {
               console.log(response)
@@ -165,6 +173,7 @@ export const AgendamentoDetail: React.FC = () => {
           if (response instanceof Error) {
             setTypeAlert("error");
             setMessageAlert(ComponentsConstants.MESSAGE_ERROR_REGISTRATION);
+            closeModal()
           } else {
             if (IsSaveAndClose()) {
               navigate(`/agendamentos`, {

@@ -102,6 +102,13 @@ export const AnimalDetail: React.FC = () => {
       });
   }, []);
 
+  useEffect(()=>{
+    setTimeout(()=>{
+      setMessageAlert(undefined)
+      setTypeAlert(undefined)
+    },2000)
+  },[messageAlert,typeAlert])
+
   const handleSave = useCallback(() => {
     if (!saveValue.current) {
       setTypeAlert("error");
@@ -113,6 +120,7 @@ export const AnimalDetail: React.FC = () => {
             if (response instanceof Error) {
               setTypeAlert("error");
               setMessageAlert(ComponentsConstants.MESSAGE_ERROR_REGISTRATION);
+              closeModal()
             } else {
               if (IsSaveAndClose()) {
                 navigate("/animais", {
@@ -132,6 +140,7 @@ export const AnimalDetail: React.FC = () => {
           if (response instanceof Error) {
             setTypeAlert("error");
             setMessageAlert(response.message);
+            closeModal()
           } else {
             if (IsSaveAndClose()) {
               navigate(`/animais`, {

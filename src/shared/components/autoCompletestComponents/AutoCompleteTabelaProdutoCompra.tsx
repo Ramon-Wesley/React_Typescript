@@ -20,7 +20,7 @@ export const AutoCompleteTabelaProdutoCompra: React.FC<IAutoCompleteCities> = ({
 }) => {
   const { clearError, defaultValue, error, fieldName, registerField } =
     useField("produtosCompras");
-  const [optionsTable,setOptionsTable]=useState<IProdutosCompras[] >(defaultValue || [] as IProdutosCompras[]);
+  const [optionsTable,setOptionsTable]=useState<IProdutosCompras[] >(defaultValue);
   const [search, setSearch] = useState("");
   const [select, setSelect] = useState<TOptionSelected>();
   const [options, setOptions] = useState<TOptionSelected[]>([]);
@@ -35,23 +35,33 @@ export const AutoCompleteTabelaProdutoCompra: React.FC<IAutoCompleteCities> = ({
     registerField({
       name: fieldName,
       getValue: () => optionsTable,
-      setValue: (_, newValue) => setOptionsTable(newValue ),
+      setValue: (_, newValue) => setOptionsTable(newValue),
     });
+   
   }, [registerField, fieldName, optionsTable]);
 
   const handleDelete=(idNumber:number)=>{
-    optionsTable.filter((e,index)=>{
-      if (e.id === idNumber){
-      optionsTable.splice(index,1)
-    }})
-    const totalValue=optionsTable.reduce((total,value)=>{return total+value.valor},0)
-    setValorTotalProdutos(totalValue)
-  }
+    console.log("idNumber"+idNumber)
+    let totalValue=0
+   optionsTable.forEach((e,index)=>{
+      if (e.produto_id !== idNumber){
+        totalValue+=e.valor
+    }  
+ })
+ setOptionsTable((e)=>{
+   return e.filter((f)=> f.produto_id !== idNumber)
+ })
+ setValorTotalProdutos(totalValue)
+ 
+   
+ }
+   
  
   
 
   const addServicos = () => {
-    if (autoCompleteValue?.id && autoCompleteValue.nome) {
+    console.log("Fas1"+optionsTable)
+    if (autoCompleteValue?.id && autoCompleteValue.nome && !optionsTable?.find((e) => e.produto_id === autoCompleteValue.id)) {
      
       const newOption = {
         id: autoCompleteValue.id,
@@ -64,12 +74,7 @@ export const AutoCompleteTabelaProdutoCompra: React.FC<IAutoCompleteCities> = ({
   
       let newOptionsTable;
       if (optionsTable && optionsTable.length > 0) {
-        if (optionsTable.find((e) => e.id === autoCompleteValue.id)) {
-          return; 
-        }else{
           newOptionsTable = [...optionsTable, newOption];
-        }
-        
       } else {
         newOptionsTable = [newOption];
       }
@@ -77,6 +82,7 @@ export const AutoCompleteTabelaProdutoCompra: React.FC<IAutoCompleteCities> = ({
       const total = newOptionsTable.reduce((cont, value) => cont + value.valor, 0);
   
       setOptionsTable(newOptionsTable);
+      console.log("Fas2"+optionsTable)
       setValorTotalProdutos(total);
       setSelect({ nome: "", id: undefined });
       setQuantidade(1);

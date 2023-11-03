@@ -59,6 +59,13 @@ export const VendasDetail: React.FC = () => {
     renderInfo();
   }, [renderInfo]);
 
+  useEffect(()=>{
+    setTimeout(()=>{
+      setMessageAlert(undefined)
+      setTypeAlert(undefined)
+    },2000)
+  },[messageAlert,typeAlert])
+
   const validationInputs: yup.ObjectSchema<IForm> = yup.object().shape({
     cliente_id: yup.number().required(),
     funcionario_id: yup.number().required(),
@@ -69,12 +76,12 @@ export const VendasDetail: React.FC = () => {
   });
   
   const validateForm = useCallback((values: IForm) => {
-  console.log(values)
-  setModalOpen(true);
-  saveValue.current = values;
+  
     validationInputs
     .validate(values, { abortEarly: false })
     .then((response) => {
+      setModalOpen(true);
+      saveValue.current = response; 
       })
       .catch((error: yup.ValidationError) => {
         const errorsResult: Record<string, string> = {};
@@ -92,11 +99,13 @@ export const VendasDetail: React.FC = () => {
       setMessageAlert("Sem dados válidos");
     } else {
       if (id !== "nova") {
-        VendasService.updateById(Number(id), saveValue.current,anteriorValue).then(
+        console.log("UPDATE: "+saveValue.current)
+        VendasService.updateById(Number(id), saveValue.current).then(
           (response) => {
             if (response instanceof Error) {
               setTypeAlert("error");
-              setMessageAlert("erro de cadastro:"+response.message);
+              setMessageAlert(response.message);
+              closeModal()
             } else {
               if (IsSaveAndClose()) {
                 navigate("/vendas", {
@@ -115,7 +124,8 @@ export const VendasDetail: React.FC = () => {
         VendasService.create(saveValue.current).then((response) => {
           if (response instanceof Error) {
             setTypeAlert("error");
-            setMessageAlert("erro de create:"+response.message);
+            setMessageAlert(response.message);
+            closeModal()
           } else {
             if (IsSaveAndClose()) {
               navigate(`/vendas`, {

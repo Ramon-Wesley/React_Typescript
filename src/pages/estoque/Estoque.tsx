@@ -111,7 +111,7 @@ export const Estoque
 
   return (
     <LayoutBase
-      title="Clientes"
+      title="Estoques"
       tools={
         <SearchTools
           textButton="Nova"

@@ -1,7 +1,7 @@
 import { Estoque } from '../../../../pages/estoque/Estoque';
 import { Environment } from '../../../environment/Environment';
 import { api } from '../axios';
-import { PersonService } from '../cliente';
+import { IErrors, PersonService } from '../cliente';
 import { EstoqueService, IEstoques } from '../estoque/EstoqueService';
 import { FuncionarioService, IFuncionarios } from '../funcionarios/FuncionariosService';
 
@@ -37,15 +37,7 @@ export interface IVendaResult{
     cliente_id: number,
     data: string,
     valorTotal: number,
-    produtosVendas: [
-      {
-        venda_id: number,
-        produto_id: number,
-        quantidade: number,
-        valorUnitario: number,
-        valor: number
-      }
-    ],
+    produtosVendas: IProdutosVendas[],
     cliente: {
       id: number,
       cpf: string,
@@ -78,15 +70,19 @@ interface IDataCount {
 
 const create=async(vendas:Omit<IVenda,"id">):Promise<IVenda | Error>=>{
    
-   try {
-    const {data}=await api.post("/vendas",vendas)
-    if(data){
-        return data as IVenda
-    }
-    return new Error ("Erro ao salvar venda")
-   } catch (error) {
-    return new Error("Erro ao salvar registro!")
-   }
+   return api.post("/vendas",vendas)
+   .then((response) => {
+      const data = response.data;
+      console.log(data)
+      if (data.hasOwnProperty('errors')) {
+        const res=data as IErrors
+        return new Error(res.response.data.errors[0])
+      } else {
+        return data.id;
+      }
+    }).catch((err:IErrors) => {
+      return new Error(err.response.data.errors[0])
+    });
 }
 
 const getById=async(id:number):Promise<IVendaResult | Error>=>{
@@ -113,17 +109,19 @@ const deleteById=async(id:number):Promise<void |Error>=>{
    }
 }
 
-
-const updateById=async(id:number,vendas:Omit<IVenda,"id">,valorAnterior:number[]):Promise<IVenda | Error>=>{
-   try {
-    const {data}=await api.put(`/vendas/${id}`,vendas)
-    if(data){
-        return data as IVenda
-    }
-    return new Error("Venda nao encontrado!")
-   } catch (error) {
-    return new Error("Erro ao atualizar registro!")
-   }
+const updateById=async(id:number,vendas:Omit<IVenda,"id">):Promise<IVenda | Error>=>{
+  return api.put(`/vendas/${id}`,vendas).then((response) => {
+      const data = response.data;
+      console.log(data)
+      if (data.hasOwnProperty('errors')) {
+        const res=data as IErrors
+        return new Error(res.response.data.errors[0])
+      } else {
+        return data.id;
+      }
+    }).catch((err:IErrors) => {
+      return new Error(err.response.data.errors[0])
+    });
 }
 
 

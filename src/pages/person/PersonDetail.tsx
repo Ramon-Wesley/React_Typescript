@@ -30,7 +30,6 @@ export const PersonDetail: React.FC = () => {
   const { save, IsSaveAndClose, saveAndClose, formRef } = UseVForm();
   const navigate = useNavigate();
   const saveValue = useRef<IForm>();
-  const [endereco,setEndereco]=useState<IEndereco>();
   const [typeAlert, setTypeAlert] = useState<AlertColor>();
   const [messageAlert, setMessageAlert] = useState<string>();
   const {CpfRegex,TelefoneRegex}=Mascaras
@@ -71,7 +70,7 @@ export const PersonDetail: React.FC = () => {
     endereco_id: yup.number(),
     endereco: yup.object().shape({
       id: yup.number(),
-      cep: yup.string().required(),
+      cep: yup.string().required().length(9),
       logradouro: yup.string().required(),
       complemento: yup.string(),
       bairro: yup.string().required(),
@@ -82,9 +81,10 @@ export const PersonDetail: React.FC = () => {
     
   });
   const validateForm = useCallback((values: IForm) => {
-    console.log(values)
+    if(values.cpf && values.telefone){
     values.cpf=CpfRegex(values.cpf)
     values.telefone=TelefoneRegex(values.telefone)
+    }
     validationInputs
       .validate(values, { abortEarly: false })
       .then((response) => {
@@ -96,8 +96,8 @@ export const PersonDetail: React.FC = () => {
         error.inner.forEach((err) => {
           if (err.path === undefined) return;
           errorsResult[err.path] = err.message;
-          console.log(err.path+":"+err.message)
         });
+        console.log(errorsResult)
         formRef.current?.setErrors(errorsResult);
       });
   }, []);
@@ -113,7 +113,8 @@ export const PersonDetail: React.FC = () => {
           (response) => {
             if (response instanceof Error) {
               setTypeAlert("error");
-              setMessageAlert(ComponentsConstants.MESSAGE_ERROR_REGISTRATION);
+              setMessageAlert(response.message);
+              closeModal()
             } else {
               if (IsSaveAndClose()) {
                 navigate("/pessoas", {
@@ -132,7 +133,9 @@ export const PersonDetail: React.FC = () => {
         PersonService.create(saveValue.current).then((response) => {
           if (response instanceof Error) {
             setTypeAlert("error");
-            setMessageAlert(ComponentsConstants.MESSAGE_ERROR_REGISTRATION);
+            setMessageAlert(response.message);
+            closeModal()
+            
           } else {
             if (IsSaveAndClose()) {
               navigate(`/pessoas`, {
@@ -183,7 +186,12 @@ export const PersonDetail: React.FC = () => {
 
     setModalOpen(true);
   }, []);
-
+useEffect(()=>{
+  setTimeout(()=>{
+    setMessageAlert(undefined)
+    setTypeAlert(undefined)
+  },2000)
+},[messageAlert,typeAlert])
   const closeModal = useCallback(() => {
     setModalOpen(false);
     nameAction.current = undefined;
@@ -204,7 +212,10 @@ export const PersonDetail: React.FC = () => {
       }
     >
       {typeAlert !== undefined && messageAlert !== undefined && (
+        <>
         <Alert severity={typeAlert}>{messageAlert}</Alert>
+       
+        </>
       )}
 
       <VModal
@@ -254,9 +265,9 @@ export const PersonDetail: React.FC = () => {
                   name="cpf"
                   label="Cpf*"
                   fullWidth
-                  onChange={(e)=>setCpf(CpfRegex(e.target.value))}
+                 
                   inputProps={{ maxLength: 14,minLenght:14, }}
-                  value={cpf}
+                  
                 />
               </Grid>
               <Grid item xs={12} sm={12} md={6} lg={4} xl={2}>
@@ -297,7 +308,7 @@ export const PersonDetail: React.FC = () => {
               <Grid item xs={12} sm={12} md={8} lg={4} xl={2}>
                 <VTextField name="telefone" label="Telefone*" fullWidth
                 onChange={(e)=>setTelefone(TelefoneRegex(e.target.value))}
-                value ={telefone}
+              
                 inputProps={{ maxLength: 15,minLenght:15, }}
                 />
               </Grid>
