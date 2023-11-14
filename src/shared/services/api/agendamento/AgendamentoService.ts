@@ -103,7 +103,7 @@ const getById=async(id:number):Promise<IAgendamento | Error>=>{
 
     try {
         const {data}=await api.get<IAgendamento>(`/agendamentos/${id}`)
-        console.log(data);
+       
         if(data){
           const indice=data.data.indexOf("T")
           data.data=data.data.substring(0,indice)

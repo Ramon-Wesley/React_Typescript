@@ -95,7 +95,7 @@ export const Estoque
   useEffect(() => {
     setIsLoading(true);
     debounce(() => {
-      console.log(getSearch);
+      
       EstoqueService.getAll(getSearch, getPage).then((response) => {
         setIsLoading(false);
         if (response instanceof Error) {

@@ -76,7 +76,7 @@ const getAllByIdCliente=async(idCliente:number,filter="",limit=5,page=1):Promise
         const urlGetAll = `animais/cliente/${idCliente}`;
         const {data,headers}=await api.get(urlGetAll);
 
-        console.log(data)
+     
         if (data) {
             return data as IDataCount
           }

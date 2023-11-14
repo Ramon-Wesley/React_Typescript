@@ -116,7 +116,7 @@ export const AgendamentoDetail: React.FC = () => {
   });
 
   const validateForm = useCallback((values: IForm) => {
-    console.log(values)
+  
     validationInputs
       .validate(values, { abortEarly: false })
       .then((response) => {
@@ -146,7 +146,7 @@ export const AgendamentoDetail: React.FC = () => {
       setMessageAlert("Sem dados válidos");
     } else {
       if (id !== "nova") {
-        console.log("Update: "+id)
+      
         AgendamentoService.updateById(Number(id), saveValue.current).then(
           (response) => {
             if (response instanceof Error) {
@@ -154,7 +154,7 @@ export const AgendamentoDetail: React.FC = () => {
               closeModal()
               setMessageAlert(ComponentsConstants.MESSAGE_ERROR_REGISTRATION);
             } else {
-              console.log(response)
+            
               if (IsSaveAndClose()) {
                 navigate("/agendamentos", {
                   state: {

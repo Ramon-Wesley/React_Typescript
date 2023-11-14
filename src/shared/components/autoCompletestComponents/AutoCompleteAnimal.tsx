@@ -51,16 +51,16 @@ const dataValue=useCallback(()=>{
 
   debounce(() => {
       setIsLoading(true);
-      console.log(idCliente)
+     
       if(idCliente !== undefined && idCliente > 0){
-        console.log(idCliente)
+       
         animalService.getAllByIdCliente(idCliente,search, 1)
         .then((response) => {
           setIsLoading(false);
           if (response instanceof Error) {
-            console.log(response.message)
+            
           } else {
-            console.log(response)
+           
             setOptions(
               response.data.map((res) => ({ animalId: res.id,nome:res.nome })));
             }

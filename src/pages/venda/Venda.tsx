@@ -92,7 +92,7 @@ export const Vendas: React.FC = () => {
   useEffect(() => {
     setIsLoading(true);
     debounce(() => {
-      console.log(getSearch);
+
       VendasService.getAll(getSearch, getPage).then((response) => {
         setIsLoading(false);
         if (response instanceof Error) {

@@ -114,7 +114,7 @@ const create= async(person: Omit<IFuncionarios,'id'>):Promise<number | Error> =>
 
   return api.post(`/funcionarios/`,person).then((response) => {
     const data = response.data;
-    console.log(data)
+   
     if (data.hasOwnProperty('errors')) {
       const res=data as IErrors
       return new Error(res.response.data.errors[0])

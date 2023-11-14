@@ -96,7 +96,6 @@ export const Servico
   useEffect(() => {
     setIsLoading(true);
     debounce(() => {
-      console.log(getSearch);
       ServicoService.getAll(getSearch, getPage).then((response) => {
         setIsLoading(false);
         if (response instanceof Error) {

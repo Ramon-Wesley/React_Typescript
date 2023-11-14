@@ -51,7 +51,7 @@ export const FornecedorDetail: React.FC = () => {
      }else{
        formRef.current?.setData(result) 
        enderecoId=result.endereco_id as number
-       console.log(enderecoId)
+     
        setName(result.nome) 
       
      }
@@ -78,7 +78,7 @@ export const FornecedorDetail: React.FC = () => {
             })
           }
           }else{
-            console.log(response)
+         
       setEndereco(response)
           }
         })

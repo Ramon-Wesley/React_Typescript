@@ -41,7 +41,7 @@ export const AutoCompleteTabelaProdutoCompra: React.FC<IAutoCompleteCities> = ({
   }, [registerField, fieldName, optionsTable]);
 
   const handleDelete=(idNumber:number)=>{
-    console.log("idNumber"+idNumber)
+
     let totalValue=0
    optionsTable.forEach((e,index)=>{
       if (e.produto_id !== idNumber){
@@ -60,7 +60,7 @@ export const AutoCompleteTabelaProdutoCompra: React.FC<IAutoCompleteCities> = ({
   
 
   const addServicos = () => {
-    console.log("Fas1"+optionsTable)
+  
     if (autoCompleteValue?.id && autoCompleteValue.nome && !optionsTable?.find((e) => e.produto_id === autoCompleteValue.id)) {
      
       const newOption = {
@@ -82,7 +82,7 @@ export const AutoCompleteTabelaProdutoCompra: React.FC<IAutoCompleteCities> = ({
       const total = newOptionsTable.reduce((cont, value) => cont + value.valor, 0);
   
       setOptionsTable(newOptionsTable);
-      console.log("Fas2"+optionsTable)
+      
       setValorTotalProdutos(total);
       setSelect({ nome: "", id: undefined });
       setQuantidade(1);
@@ -112,7 +112,7 @@ export const AutoCompleteTabelaProdutoCompra: React.FC<IAutoCompleteCities> = ({
               }
             });
       } catch (error) {
-        console.log(error);
+       
       }
     });
   }, []);

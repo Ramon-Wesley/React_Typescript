@@ -93,7 +93,7 @@ export const People: React.FC = () => {
   useEffect(() => {
     setIsLoading(true);
     debounce(() => {
-      console.log(getSearch);
+     
       PersonService.getAll(getSearch, getPage).then((response) => {
         setIsLoading(false);
         if (response instanceof Error) {

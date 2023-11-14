@@ -46,7 +46,7 @@ export const ServicoDetail: React.FC = () => {
      }else{
        formRef.current?.setData(result) 
        setName(result.nome) 
-       console.log(result)
+       
      }
     
    }
@@ -68,7 +68,7 @@ export const ServicoDetail: React.FC = () => {
 
 
   const validateForm = useCallback((values: IForm) => {
-    console.log(values)
+
     validationInputs
       .validate(values, { abortEarly: false })
       .then((response) => {
@@ -80,7 +80,7 @@ export const ServicoDetail: React.FC = () => {
         error.inner.forEach((err) => {
           if (err.path === undefined) return;
           errorsResult[err.path] = err.message;
-          console.log(err.message)
+
         });
         formRef.current?.setErrors(errorsResult);
       });

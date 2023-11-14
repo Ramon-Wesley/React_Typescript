@@ -21,7 +21,7 @@ export const VRadioGroup: React.FC<VRadioGroupProps> = ({ name, onChange }) => {
         return value;
       },
     });
-    console.log(value)
+
   }, [registerField, fieldName,value]);
 const valorAtual=useMemo(()=>{
   return value

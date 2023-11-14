@@ -102,23 +102,23 @@ const getById = async (id: number): Promise<IPersons | Error> => {
 
 const updateById = async (
   id: number,
-  data: Omit<IPersons, "id">
+  person: Omit<IPersons, "id">
 ): Promise<void | Error> => {
-  console.log("Update "+data.endereco_id)
-   return api.put(`/clientes/${id}`, data)
-    .then((response) => {
-      const data = response.data;
-      console.log(data)
+
+
+  try {
+   const{data}=await api.put(`/clientes/${id}`, person)
+      
       if (data.hasOwnProperty('errors')) {
-        const res=data as IErrors
-        const errors=res.response.data.errors[0].length === 1 ?  res.response.data.errors : res.response.data.errors[0]
-        return new Error(errors as string)
-      } else {
-        return data.id;
-      }
-    }).catch((err:IErrors) => {
-      return new Error(err.response.data.errors[0])
-    })
+       const res=data as IErrors
+       return new Error(res.response.data.errors[0])
+     } else {
+       return data.id;
+     }
+    } catch (err ) {
+      return new Error(err as string)  
+    }
+   
 };
 
 const create= async(person: Omit<IPersons,'id'>):Promise<number | Error> =>{
@@ -126,7 +126,8 @@ const create= async(person: Omit<IPersons,'id'>):Promise<number | Error> =>{
    return api.post(`/clientes/`, person)
     .then((response) => {
       const data = response.data;
-      console.log(data)
+
+      
       if (data.hasOwnProperty('errors')) {
         const res=data as IErrors
         return new Error(res.response.data.errors[0])

@@ -94,7 +94,7 @@ export const Funcionario: React.FC = () => {
   useEffect(() => {
     setIsLoading(true);
     debounce(() => {
-      console.log(getSearch);
+
       FuncionarioService.getAll(getSearch, getPage).then((response) => {
         setIsLoading(false);
         if (response instanceof Error) {

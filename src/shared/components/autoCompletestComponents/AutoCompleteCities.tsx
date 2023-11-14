@@ -49,7 +49,7 @@ export const AutoCompleteCities: React.FC<IAutoCompleteCities> = ({
           })
         }
         }else{
-          console.log(response)
+         
     setEndereco(response)
         }
       })

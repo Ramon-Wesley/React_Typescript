@@ -51,11 +51,8 @@ export const PersonDetail: React.FC = () => {
         })
       }else{
         
-        enderecoId = result.endereco_id as number
         formRef.current?.setData(result) 
-      
-        
-        console.log(enderecoId)
+        enderecoId = result.endereco_id as number
     
         setName(result.nome) 
        
@@ -106,7 +103,7 @@ export const PersonDetail: React.FC = () => {
           if (err.path === undefined) return;
           errorsResult[err.path] = err.message;
         });
-        console.log(errorsResult)
+       
         formRef.current?.setErrors(errorsResult);
       });
   }, []);

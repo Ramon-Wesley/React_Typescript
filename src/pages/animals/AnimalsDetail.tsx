@@ -57,7 +57,7 @@ export const AnimalDetail: React.FC = () => {
      }else{
        formRef.current?.setData(result) 
        setName(result.nome) 
-       console.log(result)
+     
      }
     
    }
@@ -83,20 +83,20 @@ export const AnimalDetail: React.FC = () => {
   });
 
   const validateForm = useCallback((values: IForm) => {
-    console.log(values)
+  
     validationInputs
     .validate(values, { abortEarly: false })
     .then((response) => {
       setModalOpen(true);
       saveValue.current = response;
-      console.log(values)
+      
       })
       .catch((error: yup.ValidationError) => {
         const errorsResult: Record<string, string> = {};
         error.inner.forEach((err) => {
           if (err.path === undefined) return;
           errorsResult[err.path] = err.message;
-          console.log(err.path)
+        
         });
         formRef.current?.setErrors(errorsResult);
       });

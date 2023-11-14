@@ -94,7 +94,7 @@ const verificarEstoque = async (
       const urlGetAll = `/estoques?page=${page}&limit=${Environment.LINES_LIMITS}&order=DESC&filter=${filter}`;
   
       const { data, headers } = await api.get<IDataCount>(urlGetAll);
-      console.log(data)
+  
       if (data) {
         return data
       }

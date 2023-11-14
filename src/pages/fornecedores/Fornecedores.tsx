@@ -94,7 +94,7 @@ export const Fornecedor: React.FC = () => {
   useEffect(() => {
     setIsLoading(true);
     debounce(() => {
-      console.log(getSearch);
+    
       FornecedorService.getAll(getSearch, getPage).then((response) => {
         setIsLoading(false);
         if (response instanceof Error) {

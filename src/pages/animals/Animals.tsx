@@ -92,14 +92,13 @@ export const Animais: React.FC = () => {
   useEffect(() => {
     setIsLoading(true);
     debounce(() => {
-      console.log(getSearch);
       animalService.getAll(getSearch, getPage).then((response) => {
         setIsLoading(false);
         if (response instanceof Error) {
           setMessageAlert(response.message);
           setTypeAlert('error')
         } else {
-          console.log(response)
+        
           setRows(response.data);
           setCount(response.totalCount);
         }

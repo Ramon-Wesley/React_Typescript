@@ -50,7 +50,7 @@ export const FuncionarioDetail: React.FC = () => {
        formRef.current?.setData(result)
        enderecoId=result.endereco_id as number
        setName(result.nome) 
-       console.log(enderecoId)
+  
      }
     
    }
@@ -83,7 +83,7 @@ export const FuncionarioDetail: React.FC = () => {
             })
           }
           }else{
-            console.log(response)
+           
       setEndereco(response)
           }
         })
@@ -127,7 +127,7 @@ export const FuncionarioDetail: React.FC = () => {
 
   });
   const validateForm = useCallback((values: IForm) => {
-    console.log()
+   
     if(enderecoId){
       values.endereco_id=enderecoId;
     }

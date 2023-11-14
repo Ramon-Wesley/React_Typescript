@@ -43,7 +43,7 @@ export const ComprasDetail: React.FC = () => {
     const result = id !== "nova" && (await ComprasService.getById(Number(id)));
   
       if(result instanceof Error){
-        console.log("skjsk"+result.message)
+       
         navigate("/compras")
       }else if(typeof result === "boolean"){
         formRef.current?.setData({
@@ -56,7 +56,7 @@ export const ComprasDetail: React.FC = () => {
       }else{
         formRef.current?.setData(result) 
 
-      result.produtosCompras.forEach((e)=>console.log("OLHE"+e.quantidade))
+      result.produtosCompras.forEach((e)=>("OLHE"+e.quantidade))
      
       }
   }, [id]);
@@ -86,7 +86,7 @@ export const ComprasDetail: React.FC = () => {
         error.inner.forEach((err) => {
           if (err.path === undefined) return;
           errorsResult[err.path] = err.message;
-          console.log(err.message)
+         
         });
         formRef.current?.setErrors(errorsResult);
       });

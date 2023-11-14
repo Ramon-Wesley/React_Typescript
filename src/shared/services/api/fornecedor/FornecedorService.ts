@@ -96,7 +96,7 @@ const updateById = async (
     return api.put(`/fornecedores/${id}`, data)
     .then((response) => {
       const data = response.data;
-      console.log(data)
+      
       if (data.hasOwnProperty('errors')) {
         const res=data as IErrors
         return new Error(res.response.data.errors[0])
@@ -113,7 +113,7 @@ const create= async(person: Omit<IFornecedores,'id'>):Promise<number | Error> =>
   return api.post(`/fornecedores/`,person)
   .then((response) => {
     const data = response.data;
-    console.log(data)
+    
     if (data.hasOwnProperty('errors')) {
       const res=data as IErrors
       return new Error(res.response.data.errors[0])

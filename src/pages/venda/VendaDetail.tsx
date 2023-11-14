@@ -39,7 +39,7 @@ export const VendasDetail: React.FC = () => {
 
   const renderInfo = useCallback(async () => {
     const result = id !== "nova" && (await VendasService.getById(Number(id)));
-  console.log(result);
+
       if(result instanceof Error){
         navigate("/vendas")
       }else if(typeof result === "boolean"){
@@ -99,7 +99,6 @@ export const VendasDetail: React.FC = () => {
       setMessageAlert("Sem dados válidos");
     } else {
       if (id !== "nova") {
-        console.log("UPDATE: "+saveValue.current)
         VendasService.updateById(Number(id), saveValue.current).then(
           (response) => {
             if (response instanceof Error) {

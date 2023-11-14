@@ -46,7 +46,7 @@ export const AutoCompleteProduto: React.FC<IAutoCompleteCities> = ({
               }
             });
       } catch (error) {
-        console.log(error);
+       
       }
     });
   }, []);
