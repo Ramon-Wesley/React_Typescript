@@ -13,14 +13,11 @@ interface IAutoCompleteCities {
 export const AutoCompleteCities: React.FC<IAutoCompleteCities> = ({
   isExternalLoading = false,
 }) => {
-  const { clearError, defaultValue, error, fieldName, registerField } =
+  const { defaultValue, error, fieldName, registerField } =
     useField("endereco");
 
   const [endereco,setEndereco]=useState<IEndereco>(defaultValue)
   const[cep,setCep]=useState("")
-  const[numero,setNumero]=useState("")
-  const[complemento,setComplemento]=useState("")
-  
 
   useEffect(() => {
     registerField({
@@ -33,12 +30,6 @@ export const AutoCompleteCities: React.FC<IAutoCompleteCities> = ({
   useEffect(()=>{
     if(endereco?.cep?.length >=8 ){
       setCep(endereco.cep)
-      if(numero.length === 0){
-        setNumero(endereco?.numero || "")
-      }
-      if(complemento?.length === 0){
-        setComplemento(endereco?.complemento || "")
-      }
     }
   },[endereco])
 
@@ -52,9 +43,8 @@ export const AutoCompleteCities: React.FC<IAutoCompleteCities> = ({
             logradouro:"",
             bairro:"",
             cep:"",
-            complemento:"",
             localidade:"",
-            numero:"",
+          
            
           })
         }
@@ -69,23 +59,12 @@ export const AutoCompleteCities: React.FC<IAutoCompleteCities> = ({
           logradouro:"",
           bairro:"",
           cep:"",
-          complemento:"",
           localidade:"",
-          numero:"",
-         
         })
 
       }
     }
 },[cep])
-const changeNumero=async(e:string)=>{
-setNumero(e)
-setEndereco({...endereco,numero:e})
-}
-const changeComplemento=async(e:string)=>{
-  setComplemento(e)
-  setEndereco({...endereco,complemento:e})
-  }
 
   return (
     <>
@@ -135,8 +114,8 @@ const changeComplemento=async(e:string)=>{
     </Grid>
     <Grid item xs={12} sm={12} md={8} lg={4} xl={2}>
     <TextField name="numero" label="Numero*" fullWidth 
-     onChange={(e)=>{changeNumero(e.target.value)}}
-     value={numero}
+     onChange={(e)=>{setEndereco({...endereco,numero:e.target.value})}}
+     value={endereco?.numero}
  
      required
      focused
@@ -144,9 +123,9 @@ const changeComplemento=async(e:string)=>{
     </Grid>
     <Grid item xs={12} sm={12} md={8} lg={4} xl={2}>
     <TextField name="complemento" label="Complemento" fullWidth 
-     onChange={(e)=>{changeComplemento(e.target.value)}}
      focused
-     value={complemento}
+     onChange={(e)=>{setEndereco({...endereco,complemento:e.target.value})}}
+     value={endereco?.complemento}
      />
     </Grid>
 </Grid> 

@@ -46,7 +46,6 @@ const updateById=async(id:number,servico:Omit<IServicos,"id">):Promise<IServicos
 const deleteById=async(id:number):Promise<void |Error>=>{
     try {
         await api.delete(`/servicos/${id}`)
-        return new Error("Erro ao deletar o servico!")
     } catch (error) {
         return new Error("Erro ao deletar o servico")
     }

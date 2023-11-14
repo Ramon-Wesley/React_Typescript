@@ -19,6 +19,7 @@ export const FuncionarioDetail: React.FC = () => {
   type TNameAction = "save" | "saveAndClose" | "delete" | undefined;
   interface IForm extends Omit<IFuncionarios, "id"> {}
   const { id = "nova" } = useParams<"id">();
+  let enderecoId:number|undefined;
   const [sexo,setSexo]=useState("masculino");
   const [name, setName] = useState<string>();
   const [modalOpen, setModalOpen] = useState(false);
@@ -46,9 +47,10 @@ export const FuncionarioDetail: React.FC = () => {
           data_de_nascimento:""
         })
      }else{
-       formRef.current?.setData(result) 
+       formRef.current?.setData(result)
+       enderecoId=result.endereco_id as number
        setName(result.nome) 
-       console.log(result)
+       console.log(enderecoId)
      }
     
    }
@@ -110,6 +112,7 @@ export const FuncionarioDetail: React.FC = () => {
     nome: yup.string().min(2).required(),
     email: yup.string().email().required(),
     ra:yup.string().min(11).max(11).required(),
+    endereco_id:yup.number(),
     sexo:yup.string().oneOf(["feminino","masculino","outros"]).required(),
     data_de_nascimento:yup.string().required(),
     telefone:yup.string().required(),
@@ -125,6 +128,9 @@ export const FuncionarioDetail: React.FC = () => {
   });
   const validateForm = useCallback((values: IForm) => {
     console.log()
+    if(enderecoId){
+      values.endereco_id=enderecoId;
+    }
     values.sexo=sexo;
     validationInputs
       .validate(values, { abortEarly: false })

@@ -27,7 +27,7 @@ const create=async(estoques:Omit<IEstoques,"id">):Promise<IEstoques | Error>=>{
       
         return new Error("Erro ao registrar o estoque!")
     } catch (error) {
-        return new Error ("Erro ao registrar o estoque")
+        return new Error ("Erro ao registrar o estoque"+error)
     }
 }
 
@@ -41,14 +41,14 @@ const updateById=async(id:number,estoque:Omit<IEstoques,"id">):Promise<IEstoques
         
         return new Error("Erro ao atualizar o estoque!")
     } catch (error) {
-        return new Error ("Erro ao atualizar o estoque")
+        return new Error ("Erro ao atualizar o estoque"+error)
     }
 }
 
 const deleteById=async(id:number):Promise<void |Error>=>{
     try {
         await api.delete(`/estoques/${id}`)
-        return new Error("Erro ao deletar o estoque!")
+       
     } catch (error) {
         return new Error("Erro ao deletar o estoque")
     }

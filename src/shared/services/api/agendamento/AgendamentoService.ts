@@ -95,7 +95,6 @@ const updateById=async(id:number,agendamento:Omit<IAgendamento,"id">):Promise<IA
 const deleteById=async(id:number):Promise<void |Error>=>{
     try {
         await api.delete(`/agendamentos/${id}`)
-        return new Error("Erro ao deletar o agendamento!")
     } catch (error) {
         return new Error("Erro ao deletar o agendamento")
     }

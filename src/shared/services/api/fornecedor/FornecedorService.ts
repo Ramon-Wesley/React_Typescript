@@ -8,6 +8,7 @@ export interface IFornecedores {
   nome: string;
   cnpj:string;
   sexo:string;
+  endereco_id?:number;
   data_de_nascimento:string;
   email: string;
   telefone:string;

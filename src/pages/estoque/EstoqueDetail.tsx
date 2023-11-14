@@ -34,8 +34,6 @@ export const EstoqueDetail: React.FC = () => {
    }else{
      if(typeof result === "boolean"){
       
-
-
        formRef.current?.setData({
            nome: "",
            estoqueAbaixo: 0,
@@ -96,7 +94,7 @@ export const EstoqueDetail: React.FC = () => {
           (response) => {
             if (response instanceof Error) {
               setTypeAlert("error");
-              setMessageAlert(ComponentsConstants.MESSAGE_ERROR_REGISTRATION);
+              setMessageAlert(response.message);
             } else {
               if (IsSaveAndClose()) {
                 navigate("/estoques", {
@@ -115,7 +113,7 @@ export const EstoqueDetail: React.FC = () => {
         EstoqueService.create(saveValue.current).then((response) => {
           if (response instanceof Error) {
             setTypeAlert("error");
-            setMessageAlert(ComponentsConstants.MESSAGE_ERROR_REGISTRATION);
+            setMessageAlert(response.message+"aaaa");
           } else {
             if (IsSaveAndClose()) {
               navigate(`/estoques`, {

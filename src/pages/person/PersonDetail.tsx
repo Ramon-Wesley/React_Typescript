@@ -26,6 +26,7 @@ export const PersonDetail: React.FC = () => {
   const [telefone,setTelefone]=useState("");
   const [name, setName] = useState<string>();
   const [modalOpen, setModalOpen] = useState(false);
+  let enderecoId:number|undefined;
   const nameAction = useRef<TNameAction>();
   const { save, IsSaveAndClose, saveAndClose, formRef } = UseVForm();
   const navigate = useNavigate();
@@ -35,6 +36,7 @@ export const PersonDetail: React.FC = () => {
   const {CpfRegex,TelefoneRegex}=Mascaras
   const renderInfo = useCallback(async () => {
     const result = id !== "nova" && (await PersonService.getById(Number(id)));
+
     if(result instanceof Error){
        navigate("/pessoas")
     }else{
@@ -48,9 +50,15 @@ export const PersonDetail: React.FC = () => {
          data_de_nascimento:Date.now()
         })
       }else{
+        
+        enderecoId = result.endereco_id as number
         formRef.current?.setData(result) 
+      
+        
+        console.log(enderecoId)
+    
         setName(result.nome) 
-        console.log(result)
+       
       }
      
     }
@@ -75,12 +83,13 @@ export const PersonDetail: React.FC = () => {
       complemento: yup.string(),
       bairro: yup.string().required(),
       localidade: yup.string().required(),
+      numero: yup.string(),
       uf: yup.string().required(),
-      numero: yup.string().required(),
     }),
     
   });
   const validateForm = useCallback((values: IForm) => {
+    values.endereco_id=enderecoId
     if(values.cpf && values.telefone){
     values.cpf=CpfRegex(values.cpf)
     values.telefone=TelefoneRegex(values.telefone)

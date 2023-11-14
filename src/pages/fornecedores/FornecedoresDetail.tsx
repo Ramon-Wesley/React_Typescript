@@ -25,6 +25,7 @@ export const FornecedorDetail: React.FC = () => {
   const [name, setName] = useState<string>();
   const [modalOpen, setModalOpen] = useState(false);
   const nameAction = useRef<TNameAction>();
+  let enderecoId:number|undefined;
   const { save, IsSaveAndClose, saveAndClose, formRef } = UseVForm();
   const navigate = useNavigate();
   const saveValue = useRef<IForm>();
@@ -49,8 +50,10 @@ export const FornecedorDetail: React.FC = () => {
          })
      }else{
        formRef.current?.setData(result) 
+       enderecoId=result.endereco_id as number
+       console.log(enderecoId)
        setName(result.nome) 
-       console.log(result)
+      
      }
     
    }
@@ -110,6 +113,7 @@ export const FornecedorDetail: React.FC = () => {
   const validationInputs: yup.ObjectSchema<IForm> = yup.object().shape({
     nome: yup.string().min(2).required(),
     email: yup.string().email().required(),
+    endereco_id:yup.number(),
     cnpj:yup.string().min(11).max(19).required(),
     sexo:yup.string().oneOf(["feminino","masculino","outros"]).required(),
     data_de_nascimento:yup.string().required(),
@@ -125,7 +129,9 @@ export const FornecedorDetail: React.FC = () => {
 
   });
   const validateForm = useCallback((values: IForm) => {
-    console.log()
+
+      values.endereco_id=enderecoId
+   
     values.sexo=sexo;
     validationInputs
       .validate(values, { abortEarly: false })

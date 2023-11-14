@@ -145,7 +145,7 @@ const addServicos = () => {
 
   const autoCompleteValue = useMemo(() => {
     if(select && select.produto_id){
-      console.log(select.produto_id)
+    
     
   
       if(optionsTableDelete.length > 0 && optionsTableDelete[select.produto_id]){

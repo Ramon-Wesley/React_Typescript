@@ -25,7 +25,7 @@ export interface IPersons {
 export interface IErrors{
   response:{
     data:{
-    errors:string[]
+    errors:string[] | string
     }
   }
   }
@@ -104,13 +104,15 @@ const updateById = async (
   id: number,
   data: Omit<IPersons, "id">
 ): Promise<void | Error> => {
+  console.log("Update "+data.endereco_id)
    return api.put(`/clientes/${id}`, data)
     .then((response) => {
       const data = response.data;
       console.log(data)
       if (data.hasOwnProperty('errors')) {
         const res=data as IErrors
-        return new Error(res.response.data.errors[0])
+        const errors=res.response.data.errors[0].length === 1 ?  res.response.data.errors : res.response.data.errors[0]
+        return new Error(errors as string)
       } else {
         return data.id;
       }
