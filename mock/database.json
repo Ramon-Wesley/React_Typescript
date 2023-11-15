@@ -1,0 +1,269 @@
+{
+  "clientes": [
+    {
+      "cpf": "23456789101",
+      "nome": "dndjkdnkjn",
+      "data_de_nascimento": "2023-08-28",
+      "email": "bsjkdgj@hotmail.com",
+      "telefone": "232332232",
+      "endereco": {
+        "cep": "35170-301",
+        "logradouro": "Rua B",
+        "complemento": "jkfhfjkdjkb",
+        "bairro": "Gávea",
+        "localidade": "Coronel Fabriciano",
+        "uf": "MG",
+        "ibge": "3119401",
+        "gia": "",
+        "ddd": "31",
+        "siafi": "4387",
+        "numero": "111"
+      },
+      "sexo": "masculino",
+      "id": 1
+    }
+  ],
+  "animais": [
+    {
+      
+      "cliente": {
+        "clienteId": 1,
+        "cpf": "23456789101",
+        "nome": "dndjkdnkjn"
+      },
+      "raca": {
+        "racaId": 1,
+        "especie": {
+          "especieId": 1,
+          "nome": "cachorro"
+        },
+        "nome": "poodle"
+      },
+      "nome": "Ted",
+      "peso": "6",
+      "data_de_nascimento": "2023-09-11",
+      "id": 1
+    }
+  ],
+  "fornecedores": [
+    {
+      "endereco": {
+        "cep": "35170-300",
+        "logradouro": "Rua Pedro Nolasco",
+        "complemento": "22",
+        "bairro": "Centro",
+        "localidade": "Coronel Fabriciano",
+        "uf": "MG",
+        "ibge": "3119401",
+        "gia": "",
+        "ddd": "31",
+        "siafi": "4387",
+        "numero": "166"
+      },
+      "telefone": "11 11111 1111",
+      "data_de_nascimento": "2023-09-18T03:00:00.000Z",
+      "sexo": "masculino",
+      "cnpj": "12345678910",
+      "email": "hjkhdgk@hotmail.com",
+      "nome": "dsljdksdjkdan",
+      "id": 1
+    }
+  ],
+  "funcionarios": [
+    {
+      "endereco": {
+        "cep": "35170-300",
+        "logradouro": "Rua Pedro Nolasco",
+        "complemento": "1111",
+        "bairro": "Centro",
+        "localidade": "Coronel Fabriciano",
+        "uf": "MG",
+        "ibge": "3119401",
+        "gia": "",
+        "ddd": "31",
+        "siafi": "4387",
+        "numero": "1111"
+      },
+      "telefone": "11111111",
+      "data_de_nascimento": "2023-09-18T03:00:00.000Z",
+      "sexo": "masculino",
+      "ra": "12345678911",
+      "email": "dhsjh@gmail.com",
+      "nome": "1111111",
+      "id": 1
+    }
+  ],
+  "agendamentos": [
+    {
+      "animal": {
+        "animalId": 1,
+        "nome": "Ted"
+      },
+      "cliente": {
+        "clienteId": 1,
+        "nome": "dndjkdnkjn",
+        "cpf": "23456789101"
+      },
+      "funcionario": {
+        "funcionarioId": 1,
+        "ra": "12345678911",
+        "nome": "1111111"
+      },
+      "data": "2023-09-10",
+      "servico": {
+        "servicoId": 3,
+        "nome": "servico3",
+        "valor": 22
+      },
+      "id": 1
+    }
+  ],
+  "cidades": [
+    {
+      "nome": "Osmond",
+      "id": 8
+    },
+    {
+      "nome": "Levant",
+      "id": 10
+    },
+    {
+      "id": 11,
+      "nome": "Shelby"
+    },
+    {
+      "id": 12,
+      "nome": "Eggertsville"
+    },
+    {
+      "nome": "Glenshaw",
+      "id": 13
+    },
+    {
+      "id": 14,
+      "nome": "Homeworth"
+    },
+    {
+      "id": 15,
+      "nome": "Glenbrook"
+    },
+    {
+      "id": 16,
+      "nome": "Boykin"
+    },
+    {
+      "id": 17,
+      "nome": "Calpine"
+    },
+    {
+      "id": 18,
+      "nome": "Adamstown"
+    },
+    {
+      "id": 19,
+      "nome": "Sandston"
+    },
+    {
+      "id": 20,
+      "nome": "Townsville"
+    }
+  ],
+  "racas": [
+    {
+      "racaId": 1,
+      "nome": "poodle",
+      "especie": {
+        "especieId": 1,
+        "nome": "cachorro"
+      }
+    },
+    {
+      "racaId": 3,
+      "nome": "Fox terrier",
+      "especie": {
+        "especieId": 1,
+        "nome": "cachorro"
+      }
+    },
+    {
+      "racaId": 2,
+      "nome": "border collie",
+      "especie": {
+        "especieId": 1,
+        "nome": "cachorro"
+      }
+    }
+  ],
+  "especies": [
+    {
+      "especieId": 1,
+      "nome": "cachorro"
+    }
+  ],
+  "auth": {
+    "accessToken": "agugghisauiyuyu99iw0ok"
+  },
+  "posts": [
+    {
+      "id": 1,
+      "title": "json-server",
+      "author": "typicode"
+    }
+  ],
+  "comments": [
+    {
+      "id": 1,
+      "body": "some comment",
+      "postId": 1
+    }
+  ],
+  "servicos": [
+    {
+      "id": 1,
+      "nome": "servico1",
+      "valor": 20
+    },
+    {
+      "id": 2,
+      "nome": "servico2",
+      "valor": 11
+    },
+    {
+      "id": 3,
+      "nome": "servico3",
+      "valor": 22
+    },
+    {
+      "id": 4,
+      "nome": "servico4",
+      "valor": 10
+    }
+  ],
+  "estoques": [
+    {
+      "valor": 20,
+      "quantidade": 0,
+      "estoqueAbaixo": 4,
+      "nome": "racao1",
+      "id": 1
+    },
+    {
+      "valor": 30,
+      "quantidade": 0,
+      "estoqueAbaixo": 4,
+      "nome": "racao2",
+      "id": 2
+    }
+  ],
+  "produtos": [
+    {
+      "id": 1,
+      "nome": "racao A"
+    },
+    {
+      "id": 2,
+      "nome": "racao B"
+    }
+  ],
+  "compras": []
+}
