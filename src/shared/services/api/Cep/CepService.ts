@@ -15,15 +15,9 @@ export interface IEndereco{
 export const getEndereco=async(cep:string):Promise<IEndereco | Error>=>{
  
     try {
-<<<<<<< HEAD
         const {data}=await api.get<IEndereco>(`https://viacep.com.br/ws/${cep}/json/`)
         if(data){
             return data 
-=======
-        const {data}=await api.get(`https://viacep.com.br/ws/${cep}/json/`)
-        if(data){
-            return data as IEndereco;
->>>>>>> 2f98c5ece0dc1cf562cd9bbd9811e1ec9924b089
         }
         return new Error("Endereco nao encontrado")
     } catch (error) {

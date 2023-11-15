@@ -108,11 +108,7 @@ const updateById = async (
 
   try {
    const{data}=await api.put(`/clientes/${id}`, person)
-<<<<<<< HEAD
-      console.log(JSON.stringify(person))
-=======
       
->>>>>>> 2f98c5ece0dc1cf562cd9bbd9811e1ec9924b089
       if (data.hasOwnProperty('errors')) {
        const res=data as IErrors
        return new Error(res.response.data.errors[0])
