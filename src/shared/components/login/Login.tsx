@@ -1,4 +1,4 @@
-import { Box,Button,Card,TextField,CardContent,CardActions, Typography } from "@mui/material"
+import { Box,Button,Card,TextField,CardContent,CardActions, Typography, CircularProgress } from "@mui/material"
 import { useState,useCallback } from "react"
 import * as yup from 'yup'
 import { useAuthContext } from "../../context"
@@ -16,16 +16,19 @@ export const Login:React.FC<ILogin>=({children})=>{
 
 const [email,setEmail]=useState("")
 const [password,setPassword]=useState("")
+const [isLoading,setIsLoading]=useState(false)
 const [errorsemail,setErrorsEmail]=useState("")
 const [errorspassword,setErrorsPassword]=useState("")
 const {isAuthenticated,login}=useAuthContext()
 const handleValidate=()=>{
-    
+    setIsLoading(true)
  validateSchema.validate({email,password},{abortEarly:false})
 .then((result)=>{
     login(result.email,result.password).then((result)=>{
-        setEmail("")
-        setPassword("")
+        setIsLoading(false)
+            setEmail("")
+            setPassword("")
+        
     })
    
 }).catch((errors:yup.ValidationError)=>{
@@ -76,7 +79,8 @@ if (isAuthenticated) {
                     </CardContent>
                     <CardActions>
                     <Box display='flex'  justifyContent='center' width='100%'>
-                        <Button variant="contained" onClick={handleValidate}>Entrar</Button>
+                        <Button variant="contained" onClick={handleValidate} disabled={isLoading}
+                        startIcon={isLoading ? <CircularProgress style={{ width: '10px', height: '10px' }}/> : null}>Entrar</Button>
                     </Box>
                         </CardActions>
             </Card>
