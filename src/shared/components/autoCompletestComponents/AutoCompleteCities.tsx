@@ -39,7 +39,8 @@ export const AutoCompleteCities: React.FC<IAutoCompleteCities> = ({
       .then((response)=>{
         if(response instanceof Error){
         if(endereco?.cep){
-          setEndereco({...endereco,
+          setEndereco(
+            {...endereco,
             logradouro:"",
             bairro:"",
             cep:"",
