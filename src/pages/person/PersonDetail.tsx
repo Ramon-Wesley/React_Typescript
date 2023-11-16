@@ -102,6 +102,7 @@ export const PersonDetail: React.FC = () => {
         error.inner.forEach((err) => {
           if (err.path === undefined) return;
           errorsResult[err.path] = err.message;
+          console.log(err.path)
         });
        
         formRef.current?.setErrors(errorsResult);

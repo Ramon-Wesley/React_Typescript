@@ -51,7 +51,7 @@ export const AutoCompleteCities: React.FC<IAutoCompleteCities> = ({
         }
         }else{
   
-        setEndereco({...endereco,cep:response.cep,localidade:response.localidade,logradouro:response.logradouro,bairro:response.bairro})
+        setEndereco({...endereco,cep:response.cep,localidade:response.localidade,logradouro:response.logradouro,bairro:response.bairro,uf:response.uf})
         }
       })
     }else if(cep.length === 7){
