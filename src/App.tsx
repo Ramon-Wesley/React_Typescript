@@ -8,9 +8,8 @@ import "./shared/middlewares/TraduticaoYup";
 export const App = () => {
   return (
     <AuthProvider>
-    <AppThemeContext>
-
 <Login>
+    <AppThemeContext>
       <AppDrawerContext>
         <BrowserRouter>
           <DrawerApp>
@@ -18,9 +17,8 @@ export const App = () => {
           </DrawerApp>
         </BrowserRouter>
       </AppDrawerContext>
-</Login>
-
     </AppThemeContext>
+</Login>
     </AuthProvider>
   );
 };

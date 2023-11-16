@@ -1,6 +1,7 @@
 import { Box,Button,Card,TextField,CardContent,CardActions, Typography, CircularProgress } from "@mui/material"
 import { useState,useCallback } from "react"
 import * as yup from 'yup'
+import background from "./background.jpg"
 import { useAuthContext } from "../../context"
 
 
@@ -49,11 +50,22 @@ if (isAuthenticated) {
 }
     return(
 
-        <Box width="100vw" height="100vh">
-        <Box display='flex' alignItems='center' justifyContent='center' width='100%' height='100%'>
-            <Card>
+        <Box width="100vw" height="100vh" bgcolor="none"  sx={{
+            backgroundImage: `url(${background})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+            width: '100%',
+            height: '100vh',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+        <Box display='flex' flexDirection="column" alignItems='center' justifyContent='center' width='100%' height='100%'>
+            <Typography variant="h3" color="purple" marginBottom="20px">Pet Dream</Typography>
+            <Card sx={{backgroundColor:"white"}}>
                     <CardContent>
-                <Box display='flex' flexDirection='column' gap={2} padding={2}>
+                <Box display='flex' flexDirection='column'  gap={2} padding={2}>
                         <Typography>Login</Typography>
                         <TextField
                         fullWidth
@@ -79,7 +91,7 @@ if (isAuthenticated) {
                     </CardContent>
                     <CardActions>
                     <Box display='flex'  justifyContent='center' width='100%'>
-                        <Button variant="contained" onClick={handleValidate} disabled={isLoading}
+                        <Button sx={{backgroundColor:"purple"}} variant="contained" onClick={handleValidate} disabled={isLoading}
                         startIcon={isLoading ? <CircularProgress style={{ width: '10px', height: '10px' }}/> : null}>Entrar</Button>
                     </Box>
                         </CardActions>

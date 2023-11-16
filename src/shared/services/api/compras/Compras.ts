@@ -116,10 +116,10 @@ const deleteById=async(id:number):Promise<void |Error>=>{
 
 
 const updateById=async(id:number,compras:Omit<ICompra,"id">,valorAnterior:number[]):Promise<ICompra | Error>=>{
-
+console.log(JSON.stringify(compras))
 return api.put(`/compras/${id}`,compras).then((response) => {
       const data = response.data;
-     
+     console.log(data)
       if (data.hasOwnProperty('errors')) {
         const res=data as IErrors
         return new Error(res.response.data.errors[0])
