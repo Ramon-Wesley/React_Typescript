@@ -32,7 +32,7 @@ const handleValidate=()=>{
     })
    
 }).catch((errors:yup.ValidationError)=>{
-
+    setIsLoading(false)
     errors.inner.forEach((err)=>{
         if(err.path === 'email'){
             setErrorsEmail(err.message)
