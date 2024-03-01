@@ -1,7 +1,7 @@
 import { Box,Button,Card,TextField,CardContent,CardActions, Typography, CircularProgress } from "@mui/material"
 import { useState,useCallback } from "react"
 import * as yup from 'yup'
-import background from "./background.jpg"
+import background from "./background.png"
 import { useAuthContext } from "../../context"
 
 
@@ -62,7 +62,7 @@ if (isAuthenticated) {
             alignItems: 'center',
           }}>
         <Box display='flex' flexDirection="column" alignItems='center' justifyContent='center' width='100%' height='100%'>
-            <Typography variant="h3" color="purple" marginBottom="20px">Pet Dream</Typography>
+            <Typography variant="h2"  color="white" marginBottom="20px" >Castanhas RJ</Typography>
             <Card sx={{backgroundColor:"white"}}>
                     <CardContent>
                 <Box display='flex' flexDirection='column'  gap={2} padding={2}>

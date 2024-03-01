@@ -29,11 +29,7 @@ export const AppRoutes = () => {
         label: "Clientes",
         path: "/pessoas",
       },
-      {
-        icon: "pets",
-        label: "Animais",
-        path: "/animais",
-      },
+     
       {
         icon: "person3",
         label: "Funcionarios",
@@ -44,20 +40,11 @@ export const AppRoutes = () => {
         label: "Fornecedores",
         path: "/fornecedores",
       },
-      {
-        icon: "punch_clock",
-        label: "Agendamentos",
-        path: "/agendamentos",
-      },
+     
       {
         icon: "inventory",
         label: "Estoque",
         path: "/estoques",
-      },
-      {
-        icon: "home_repair_service",
-        label: "Servico",
-        path: "/servicos",
       },
        {
         icon: "shopping",

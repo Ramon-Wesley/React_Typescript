@@ -38,7 +38,7 @@ export const createPdf= async(datas:valueSearch,tipos:TTipo,link:TLink):Promise<
 
     try {
     const {data}=  await api.post<IDataCountPdf>(`/${tipos}/${link}`,datas)
-    console.log(data)
+    
     if(data) {
         (<any>pdfMake).vfs = pdfFonts.pdfMake.vfs;
 

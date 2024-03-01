@@ -1,4 +1,4 @@
-import { AlertColor, Box, Button, FormControl, Grid, InputLabel, MenuItem, Paper, RadioGroup, Select, TextField, Typography } from "@mui/material"
+import { AlertColor, Box, Button, CircularProgress, FormControl, Grid, InputLabel, MenuItem, Paper, RadioGroup, Select, TextField, Typography } from "@mui/material"
 import { FormEvent, FormEventHandler, useCallback, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { TLink, TTipo, createPdf } from "../../services/api/pdf/PdfService";
@@ -11,7 +11,7 @@ export const RelatorioDetail:React.FC<Itipo>=({nome})=>{
 
     const [inicio, setInicio] = useState<string>();
     const [fim, setFim] = useState<string>();
-   
+    const [isLoading,setIsLoading]=useState(false)
     const navigate = useNavigate();
  
  
@@ -20,6 +20,7 @@ const save=():void | undefined=>{
 }  
    
   const handleSave = useCallback((event:FormEvent<HTMLFormElement>) => {
+    setIsLoading(true)
    event.preventDefault();
    
    event.preventDefault(); 
@@ -28,10 +29,10 @@ const save=():void | undefined=>{
    const valorFim = formData.get('dataFinal');
    const tipo = formData.get('tipo');
    const link = formData.get('link');
-   
    if(valorInicio && valorFim && tipo && link){
     createPdf({dataInicio:new Date(valorInicio.toString()),dataFinal:new Date(valorFim.toString())},tipo as TTipo,link as TLink)
     .then((e)=>{
+      setIsLoading(false)
       if(e instanceof Error){
         console.log(e.message)
       }else{
@@ -39,7 +40,7 @@ const save=():void | undefined=>{
         
     }})
    }
-
+setIsLoading(false)
     }, []);
 
 
@@ -117,7 +118,8 @@ const save=():void | undefined=>{
               </Grid>
             </Grid>
             <Grid item>
-                    <Button variant="contained" type="submit">Gerar pdf</Button>
+                    <Button variant="contained" type="submit" disabled={isLoading}
+                        startIcon={isLoading ? <CircularProgress style={{ width: '10px', height: '10px' }}/> : null}>Gerar PDF</Button>
             </Grid>
             </Grid>
         </Box>
