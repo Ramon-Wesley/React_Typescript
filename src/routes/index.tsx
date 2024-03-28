@@ -31,7 +31,7 @@ export const AppRoutes = () => {
       },
      
       {
-        icon: "person3",
+        icon: "assignment_ind",
         label: "Funcionarios",
         path: "/funcionarios",
       },
@@ -47,17 +47,17 @@ export const AppRoutes = () => {
         path: "/estoques",
       },
        {
-        icon: "shopping",
+        icon: "shopping_basket",
         label: "Compras",
         path: "/compras",
       },
        {
-        icon: "shopping_car_rounded_icon",
+        icon: "store",
         label: "Vendas",
         path: "/vendas",
       },
       {
-        icon: "file_open",
+        icon: "summarize",
         label: "Relatorios",
         path: "/relatorios",
       },
