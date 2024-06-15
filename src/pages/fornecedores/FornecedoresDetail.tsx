@@ -16,6 +16,8 @@ import { IEndereco, getEndereco } from "../../shared/services/api/Cep/CepService
 import { FornecedorService, IFornecedores } from "../../shared/services/api/fornecedor/FornecedorService";
 import { AutoCompleteCities } from "../../shared/components/autoCompletestComponents/AutoCompleteCities";
 import { VRadioGroup } from "../../shared/form/VRadioField";
+import { PhoneNumberInput } from "../../shared/components/masksComponents/PhoneNumberInput";
+import { CNPJInput } from "../../shared/components/masksComponents/CnpjInputText";
 
 export const FornecedorDetail: React.FC = () => {
   type TNameAction = "save" | "saveAndClose" | "delete" | undefined;
@@ -115,8 +117,8 @@ export const FornecedorDetail: React.FC = () => {
     email: yup.string().email().required(),
     endereco_id:yup.number(),
     cnpj:yup.string().min(11).max(19).required(),
-    sexo:yup.string().oneOf(["feminino","masculino","outros"]).required(),
-    data_de_nascimento:yup.string().required(),
+    sexo:yup.string(),
+    data_de_nascimento:yup.string(),
     telefone:yup.string().required(),
     endereco:yup.object().shape({
       cep:yup.string().required(),
@@ -133,6 +135,7 @@ export const FornecedorDetail: React.FC = () => {
       values.endereco_id=enderecoId
    
     values.sexo=sexo;
+    values.data_de_nascimento=new Date().getDate().toString()
     validationInputs
       .validate(values, { abortEarly: false })
       .then((response) => {
@@ -298,12 +301,7 @@ export const FornecedorDetail: React.FC = () => {
             </Grid>
             <Grid container item direction="row" spacing={2}>
               <Grid item xs={12} sm={12} md={6} lg={4} xl={2}>
-                <VTextField
-                  name="cnpj"
-                  label="Cnpj*"
-                  fullWidth
-                
-                />
+                <CNPJInput/>
               </Grid>
               <Grid item xs={12} sm={12} md={6} lg={4} xl={2}>
                 <VTextField
@@ -316,22 +314,12 @@ export const FornecedorDetail: React.FC = () => {
               
               <Grid item xs={12} sm={12} md={6} lg={4} xl={2} >
                                 
-                <Typography>Genero*</Typography>
-                 <VRadioGroup
-                  name="sexo"
-              />
-  
-
               </Grid>
               
             </Grid>
             <Grid container item direction="row" spacing={2}> 
             <Grid item xs={12} sm={12} md={6} lg={4} xl={2}>
-               <VTextField
-               type="date"
-               name="data_de_nascimento"
-               label="Data de nascimento*"
-               />
+               
               </Grid>
             </Grid>
             <Grid item>
@@ -342,12 +330,12 @@ export const FornecedorDetail: React.FC = () => {
                 <VTextField name="email" label="Email*" fullWidth />
               </Grid>
               <Grid item xs={12} sm={12} md={8} lg={4} xl={2}>
-                <VTextField name="telefone" label="Telefone*" fullWidth />
+                <PhoneNumberInput/>
               </Grid>
 
             </Grid>
             <Grid item>
-            <Typography variant="h6" style={{fontWeight:"bolder"}} >Endereco</Typography>
+            <Typography variant="h6" style={{fontWeight:"bolder"}} >Endereço</Typography>
             </Grid>
               <AutoCompleteCities/>
           </Grid>

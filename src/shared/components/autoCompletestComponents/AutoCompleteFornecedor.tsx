@@ -95,7 +95,7 @@ const autoCompleteValue = useMemo(() => {
         focused
         required
         {...params}
-        label="Cpf"
+        label="Cnpj"
         error={!!error}
         helperText={error}
         />

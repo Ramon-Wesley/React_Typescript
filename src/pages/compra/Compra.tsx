@@ -168,7 +168,7 @@ export const Compras: React.FC = () => {
                 </TableCell>
                 <TableCell>{row.fornecedor.nome}</TableCell>
                 <TableCell>{row.funcionario.nome}</TableCell>
-                <TableCell>{row.data}</TableCell>
+                <TableCell>{row.data.substring(0,10)}</TableCell>
                 <TableCell>{row.valorTotal}</TableCell>
               </TableRow>
             ))}

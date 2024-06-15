@@ -8,7 +8,7 @@ type IVTextField = TextFieldProps & {
 
 
 export const VTextField: React.FC<IVTextField> = ({ name, ...rest }) => {
-  const { clearError, defaultValue, error, fieldName, registerField } =
+  const { clearError, defaultValue="", error, fieldName, registerField } =
     useField(name);
   const [value, setValue] = useState(rest.value ? rest.value : defaultValue);
 

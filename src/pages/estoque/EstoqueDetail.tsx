@@ -12,6 +12,7 @@ import {  AutoCompleteProduto } from "../../shared/components/autoCompletestComp
 import { VModal } from "../../shared/components/vModal/VModal";
 import { ComponentsConstants } from "../../shared/components/componentsConstants/ComponentesConstantes";
 import { EstoqueService, IEstoques } from "../../shared/services/api/estoque/EstoqueService";
+import { DecimalInput } from "../../shared/components/masksComponents/DecimalNumberInput";
 
 export const EstoqueDetail: React.FC = () => {
   type TNameAction = "save" | "saveAndClose" | "delete" | "saveProduto" |undefined;
@@ -66,7 +67,7 @@ export const EstoqueDetail: React.FC = () => {
 
 
   const validateForm = useCallback((values: IForm) => {
-    
+    values.quantidade=0
     validationInputs
       .validate(values, { abortEarly: false })
       .then((response) => {
@@ -85,6 +86,7 @@ export const EstoqueDetail: React.FC = () => {
   }, []);
 
   const handleSave = useCallback(() => {
+    console.log(saveValue.current)
     if (!saveValue.current) {
       setTypeAlert("error");
       setMessageAlert("Sem dados válidos");
@@ -113,7 +115,7 @@ export const EstoqueDetail: React.FC = () => {
         EstoqueService.create(saveValue.current).then((response) => {
           if (response instanceof Error) {
             setTypeAlert("error");
-            setMessageAlert(response.message+"aaaa");
+            setMessageAlert(response.message);
           } else {
             if (IsSaveAndClose()) {
               navigate(`/estoques`, {
@@ -129,6 +131,7 @@ export const EstoqueDetail: React.FC = () => {
         });
       }
     }
+    closeModal()
   }, []);
 
   const handleDelete = useCallback((id: number) => {
@@ -240,20 +243,7 @@ export const EstoqueDetail: React.FC = () => {
                 />
                 <Button />
               </Grid>
-              <Grid item xs={12} sm={12} md={6} lg={2} xl={2}>
-                <VTextField
-                  name="quantidade"
-                  label="Quantidade*"
-                  fullWidth
-                  type="number"
-                  inputProps={{
-                    min: 0,
-                    readOnly: true,
-                  }}
-                 
-                  
-                />
-              </Grid>
+            
               
               <Grid item xs={12} sm={12} md={6} lg={2} xl={2} >
                                 
@@ -271,15 +261,11 @@ export const EstoqueDetail: React.FC = () => {
               </Grid>
               
             <Grid item xs={12} sm={12} md={6} lg={2} xl={2} >
-                                <VTextField
-                                    name="valor"
-                                    label="Valor*"
-                                    inputProps={{
-                                      min: 0,
-                                     
-                                    }}
-                                    fullWidth
-                                  />
+              <DecimalInput
+              name="valor"
+              label="Valor*"
+              />
+                                
                                 </Grid>
             </Grid>
                               </Grid>

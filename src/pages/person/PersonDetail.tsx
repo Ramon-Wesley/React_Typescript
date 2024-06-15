@@ -1,209 +1,35 @@
-import { useCallback, useEffect, useState, useRef } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+
 import { DetailsTools } from "../../shared/components/detailsTools/DetailsTools";
 import { LayoutBase } from "../../shared/layouts";
-import { Alert, AlertColor, Box, FormControl, FormControlLabel, FormLabel, Grid, Paper, Radio, RadioGroup, Typography } from "@mui/material";
-import { IPersons, PersonService } from "../../shared/services/api/cliente";
+import { Alert,Box,Grid, Paper, Radio, RadioGroup, Typography } from "@mui/material";
 import { VTextField } from "../../shared/form/VTextField";
-import { UseVForm } from "../../shared/form/UseVForm";
 import { Form } from "@unform/web";
-import {mask,unMask} from "remask"
-import * as yup from "yup";
 import { AutoCompleteCities } from "../../shared/components/autoCompletestComponents/AutoCompleteCities";
 import { VModal } from "../../shared/components/vModal/VModal";
-import { ComponentsConstants } from "../../shared/components/componentsConstants/ComponentesConstantes";
-import { CpfMask } from "../../shared/form/CpfMask";
-import { IEndereco, getEndereco } from "../../shared/services/api/Cep/CepService";
+import { PersonDetailFunc } from "./PersonDetailFunc";
 import { VRadioGroup } from "../../shared/form/VRadioField";
-import { Mascaras } from "../../shared/hook";
-
+import { PhoneNumberInput } from "../../shared/components/masksComponents/PhoneNumberInput";
+import { CPFInput } from "../../shared/components/masksComponents/CpfNumberInput";
 
 export const PersonDetail: React.FC = () => {
-  type TNameAction = "save" | "saveAndClose" | "delete" | undefined;
-  interface IForm extends Omit<IPersons, "id"> {}
-  const { id = "nova" } = useParams<"id">();
-  const [cpf,setCpf]=useState("");
-  const [telefone,setTelefone]=useState("");
-  const [name, setName] = useState<string>();
-  const [modalOpen, setModalOpen] = useState(false);
-  let enderecoId:number|undefined;
-  const nameAction = useRef<TNameAction>();
-  const { save, IsSaveAndClose, saveAndClose, formRef } = UseVForm();
-  const navigate = useNavigate();
-  const saveValue = useRef<IForm>();
-  const [typeAlert, setTypeAlert] = useState<AlertColor>();
-  const [messageAlert, setMessageAlert] = useState<string>();
-  const {CpfRegex,TelefoneRegex}=Mascaras
-  const renderInfo = useCallback(async () => {
-    const result = id !== "nova" && (await PersonService.getById(Number(id)));
-
-    if(result instanceof Error){
-       navigate("/pessoas")
-    }else{
-      if(typeof result === "boolean"){
-        formRef.current?.setData({
-         nome: "",
-         email: "",
-         endereco: {},
-         cpf:"",
-         sexo:"masculino",
-         data_de_nascimento:Date.now()
-        })
-      }else{
-        
-        formRef.current?.setData(result) 
-        enderecoId = result.endereco_id as number
-    
-        setName(result.nome) 
-       
-      }
-     
-    }
-    
-  }, [id]);
-  useEffect(() => {
-    renderInfo();
-  }, [renderInfo]);
-
-  const validationInputs: yup.ObjectSchema<IForm> = yup.object().shape({
-    cpf: yup.string().required(),
-    nome: yup.string().required(),
-    email: yup.string().required().email(),
-    sexo: yup.string().required(),
-    data_de_nascimento: yup.string().required(),
-    telefone: yup.string().required(),
-    endereco_id: yup.number(),
-    endereco: yup.object().shape({
-      id: yup.number(),
-      cep: yup.string().required().length(9),
-      logradouro: yup.string().required(),
-      complemento: yup.string(),
-      bairro: yup.string().required(),
-      localidade: yup.string().required(),
-      numero: yup.string(),
-      uf: yup.string().required(),
-    }),
-    
-  });
-  const validateForm = useCallback((values: IForm) => {
-    values.endereco_id=enderecoId
-    if(values.cpf && values.telefone){
-    values.cpf=CpfRegex(values.cpf)
-    values.telefone=TelefoneRegex(values.telefone)
-    }
-    validationInputs
-      .validate(values, { abortEarly: false })
-      .then((response) => {
-        setModalOpen(true);
-        saveValue.current = response;
-      })
-      .catch((error: yup.ValidationError) => {
-        const errorsResult: Record<string, string> = {};
-        error.inner.forEach((err) => {
-          if (err.path === undefined) return;
-          errorsResult[err.path] = err.message;
-          console.log(err.path)
-        });
-       
-        formRef.current?.setErrors(errorsResult);
-      });
-  }, []);
-
-  const handleSave = useCallback(() => {
-    if (!saveValue.current) {
-      setTypeAlert("error");
-      setMessageAlert("Sem dados válidos");
-    } else {
-     
-      if (id !== "nova") {
-        PersonService.updateById(Number(id), saveValue.current).then(
-          (response) => {
-            if (response instanceof Error) {
-              setTypeAlert("error");
-              setMessageAlert(response.message);
-              closeModal()
-            } else {
-              if (IsSaveAndClose()) {
-                navigate("/pessoas", {
-                  state: {
-                    message: ComponentsConstants.MESSAGE_SUCCESS_REGISTRATION,
-                    type: "success",
-                  },
-                });
-              } else {
-                closeModal();
-              }
-            }
-          }
-        );
-      } else {
-        PersonService.create(saveValue.current).then((response) => {
-          if (response instanceof Error) {
-            setTypeAlert("error");
-            setMessageAlert(response.message);
-            closeModal()
-            
-          } else {
-            if (IsSaveAndClose()) {
-              navigate(`/pessoas`, {
-                state: {
-                  message: ComponentsConstants.MESSAGE_SUCCESS_REGISTRATION,
-                  type: "success",
-                },
-              });
-            } else {
-              navigate(`/pessoas/detalhe/${response}`);
-            }
-          }
-        });
-      }
-    }
-  }, []);
-
-  const handleDelete = useCallback((id: number) => {
-    PersonService.deleteById(id).then((response) => {
-      if (response) {
-        navigate("/pessoas", {
-          state: {
-            message: ComponentsConstants.MESSAGE_ERROR_DELETE,
-            type: "error",
-          },
-        });
-      } else {
-        navigate("/pessoas", {
-          state: {
-            message: ComponentsConstants.MESSAGE_SUCCESS_DELETE,
-            type: "success",
-          },
-        });
-      }
-    });
-  }, []);
-
-  const openModal = useCallback((name: TNameAction) => {
-    nameAction.current = name;
-    if (name === "save") {
-      save();
-      return;
-    }
-    if (name === "saveAndClose") {
-      saveAndClose();
-      return;
-    }
-
-    setModalOpen(true);
-  }, []);
-useEffect(()=>{
-  setTimeout(()=>{
-    setMessageAlert(undefined)
-    setTypeAlert(undefined)
-  },2000)
-},[messageAlert,typeAlert])
-  const closeModal = useCallback(() => {
-    setModalOpen(false);
-    nameAction.current = undefined;
-    saveValue.current = undefined;
-  }, []);
+ const {
+  id,
+  openModal,
+  modalOpen,
+  navigate,
+  typeAlert,
+  messageAlert,
+  closeModal,
+  nameAction,
+  handleSave,
+  handleDelete,
+  formRef,
+  validateForm,
+  setName,
+  setTelefone,
+  name,
+  TelefoneRegex
+}= PersonDetailFunc()
 
   return (
     <LayoutBase
@@ -259,6 +85,7 @@ useEffect(()=>{
           flexDirection="column"
           variant="outlined"
         >
+          
           <Grid container direction="column" padding={2} spacing={2}>
             <Grid item>
         <Typography>Todos os campos com <span style={{color:"red"}}>*</span> são obrigatorios!</Typography>
@@ -268,14 +95,7 @@ useEffect(()=>{
             </Grid>
             <Grid container item direction="row" spacing={2}>
               <Grid item xs={12} sm={12} md={6} lg={4} xl={2}>
-                <VTextField
-                  name="cpf"
-                  label="Cpf*"
-                  fullWidth
-                 
-                  inputProps={{ maxLength: 14,minLenght:14, }}
-                  
-                />
+              <CPFInput/>
               </Grid>
               <Grid item xs={12} sm={12} md={6} lg={4} xl={2}>
                 <VTextField
@@ -288,7 +108,7 @@ useEffect(()=>{
               
               <Grid item xs={12} sm={12} md={6} lg={4} xl={2} >
                                 
-                <Typography>Genero*</Typography>
+                <Typography>Gênero*</Typography>
                  <VRadioGroup
                   name="sexo"
               />
@@ -313,16 +133,13 @@ useEffect(()=>{
                 <VTextField name="email" label="Email*" fullWidth />
               </Grid>
               <Grid item xs={12} sm={12} md={8} lg={4} xl={2}>
-                <VTextField name="telefone" label="Telefone*" fullWidth
-                onChange={(e)=>setTelefone(TelefoneRegex(e.target.value))}
-              
-                inputProps={{ maxLength: 15,minLenght:15, }}
-                />
+                <PhoneNumberInput/>
+               
               </Grid>
 
             </Grid>
             <Grid item>
-            <Typography variant="h6" style={{fontWeight:"bolder"}} >Endereco</Typography>
+            <Typography variant="h6" style={{fontWeight:"bolder"}} >Endereço</Typography>
             </Grid>
               <AutoCompleteCities/>
           </Grid>

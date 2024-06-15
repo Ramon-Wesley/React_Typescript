@@ -14,6 +14,7 @@ import { IEndereco, getEndereco } from "../../shared/services/api/Cep/CepService
 import { FuncionarioService, IFuncionarios } from "../../shared/services/api/funcionarios/FuncionariosService";
 import { AutoCompleteCities } from "../../shared/components/autoCompletestComponents/AutoCompleteCities";
 import { VRadioGroup } from "../../shared/form/VRadioField";
+import { PhoneNumberInput } from "../../shared/components/masksComponents/PhoneNumberInput";
 
 export const FuncionarioDetail: React.FC = () => {
   type TNameAction = "save" | "saveAndClose" | "delete" | undefined;
@@ -315,7 +316,7 @@ export const FuncionarioDetail: React.FC = () => {
               
               <Grid item xs={12} sm={12} md={6} lg={4} xl={2} >
                                 
-                <Typography>Genero*</Typography>
+                <Typography>Gênero*</Typography>
                  <VRadioGroup
                   name="sexo"
               />
@@ -341,12 +342,12 @@ export const FuncionarioDetail: React.FC = () => {
                 <VTextField name="email" label="Email*" fullWidth />
               </Grid>
               <Grid item xs={12} sm={12} md={8} lg={4} xl={2}>
-                <VTextField name="telefone" label="Telefone*" fullWidth />
+               <PhoneNumberInput/>
               </Grid>
 
             </Grid>
             <Grid item>
-            <Typography variant="h6" style={{fontWeight:"bolder"}} >Endereco</Typography>
+            <Typography variant="h6" style={{fontWeight:"bolder"}} >Endereço</Typography>
             </Grid>
               <AutoCompleteCities/>
           </Grid>

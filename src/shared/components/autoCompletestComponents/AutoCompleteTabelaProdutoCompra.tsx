@@ -1,5 +1,5 @@
 import { useField } from "@unform/core";
-import { useEffect, useState, useMemo, useCallback, useRef } from "react";
+import { useEffect, useState, useMemo, useCallback, useRef, ChangeEvent } from "react";
 import { UseDebounce } from "../../hook";
 import { Autocomplete, TextField, CircularProgress, Grid, Button } from "@mui/material";
 import { EstoqueService, IEstoques } from "../../services/api/estoque/EstoqueService";
@@ -18,11 +18,11 @@ type TOptionSelected = {
 export const AutoCompleteTabelaProdutoCompra: React.FC<IAutoCompleteCities> = ({
   isExternalLoading = false,
 }) => {
-  const { clearError, defaultValue, error, fieldName, registerField } =
+  const { clearError, defaultValue=[], error, fieldName="", registerField } =
     useField("produtosCompras");
-  const [optionsTable,setOptionsTable]=useState<IProdutosCompras[] >(defaultValue);
+  const [optionsTable,setOptionsTable]=useState<IProdutosCompras[] >(defaultValue || []);
   const [search, setSearch] = useState("");
-  const [select, setSelect] = useState<TOptionSelected>();
+  const [select, setSelect] = useState<TOptionSelected>({id:0,nome:""});
   const [options, setOptions] = useState<TOptionSelected[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [quantidade,setQuantidade]=useState(1);
@@ -40,21 +40,29 @@ export const AutoCompleteTabelaProdutoCompra: React.FC<IAutoCompleteCities> = ({
    
   }, [registerField, fieldName, optionsTable]);
 
-  const handleDelete=(idNumber:number)=>{
+  const handleChangeInputDecimal = (event: ChangeEvent<HTMLInputElement>): void => {
+    const inputValue = event.target.value;
+    const numericValue = inputValue.replace(/[^0-9]/g, '');
+    const decimalValue = (Number(numericValue) / 100).toFixed(2) ;
+    setPrecoUnitario(Number(decimalValue))
+  };
 
-    let totalValue=0
-   optionsTable.forEach((e,index)=>{
-      if (e.produto_id !== idNumber){
-        totalValue+=e.valor
-    }  
- })
- setOptionsTable((e)=>{
-   return e.filter((f)=> f.produto_id !== idNumber)
- })
- setValorTotalProdutos(totalValue)
- 
+  const handleDelete = (idNumber: number) => {
+    setOptionsTable((prevOptions) => {
+        const updatedOptions = prevOptions.filter((elemento) => elemento.produto_id !== idNumber);
+        
+        // Atualiza o valor total após remover o elemento
+        const totalValue = updatedOptions.reduce((acc, e) => acc + e.valor, 0);
+        
+        // Atualiza o estado `valorTotalProdutos`
+        setValorTotalProdutos(totalValue);
+        // Retorna o array atualizado
    
- }
+        return updatedOptions;
+    });
+    console.log(optionsTable.length)
+};
+
    
  
   
@@ -92,9 +100,10 @@ export const AutoCompleteTabelaProdutoCompra: React.FC<IAutoCompleteCities> = ({
   };
   
   useEffect(()=>{
-    if(precoUnitario !== 0){
-      setPrecoTotal(precoUnitario * quantidade)
-    }
+   
+      let valor=(precoUnitario*quantidade).toFixed(2)
+      setPrecoTotal(Number(valor))
+    
   },[quantidade,precoUnitario])
 
   const handleSearch = useCallback( () => {
@@ -146,7 +155,7 @@ export const AutoCompleteTabelaProdutoCompra: React.FC<IAutoCompleteCities> = ({
       noOptionsText="Sem opções"
       clearText="Apagar"
       disablePortal
-      value={autoCompleteValue}
+      value={select}
       onInputChange={(_, newValue) => setSearch(newValue)}
       options={options}
       onChange={(_, newValue) => {
@@ -171,7 +180,7 @@ export const AutoCompleteTabelaProdutoCompra: React.FC<IAutoCompleteCities> = ({
                   focused
                   value={precoUnitario}
                   type="number"
-                  onChange={(e)=>setPrecoUnitario(parseFloat(e.target.value) )}
+                  onChange={handleChangeInputDecimal}
                   label="Preco unitario"
                   error={!!error}
                   helperText={error}

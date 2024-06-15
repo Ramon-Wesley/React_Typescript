@@ -92,7 +92,7 @@ export const DrawerApp: React.FC<IDrawerApp> = ({ children }) => {
             <List>
               <ListItemButton onClick={toggleTheme}>
                 <ListItemIcon>
-                  <Icon>dark_mode</Icon>
+                  <Icon>{theme.palette.mode=="dark"?"light_mode":"dark_mode"}</Icon>
                 </ListItemIcon>
                 <ListItemText primary="Trocar tema" />
               </ListItemButton>

@@ -32,7 +32,7 @@ export const AppRoutes = () => {
      
       {
         icon: "assignment_ind",
-        label: "Funcionarios",
+        label: "Funcionários",
         path: "/funcionarios",
       },
       {
@@ -58,7 +58,7 @@ export const AppRoutes = () => {
       },
       {
         icon: "summarize",
-        label: "Relatorios",
+        label: "Relatórios",
         path: "/relatorios",
       },
     ]);

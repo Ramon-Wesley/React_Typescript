@@ -110,7 +110,7 @@ export const Funcionario: React.FC = () => {
 
   return (
     <LayoutBase
-      title="Funcionarios"
+      title="Funcionários"
       tools={
         <SearchTools
           textButton="Nova"

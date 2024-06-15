@@ -41,7 +41,7 @@ const updateById=async(id:number,estoque:Omit<IEstoques,"id">):Promise<IEstoques
         
         return new Error("Erro ao atualizar o estoque!")
     } catch (error) {
-        return new Error ("Erro ao atualizar o estoque"+error)
+        return new Error ("Erro ao atualizar o estoque! "+error)
     }
 }
 

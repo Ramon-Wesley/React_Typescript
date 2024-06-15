@@ -93,7 +93,7 @@ export const AutoCompleteCities: React.FC<IAutoCompleteCities> = ({
     />
     </Grid>
     <Grid item xs={12} sm={12} md={8} lg={4} xl={2}>
-    <TextField name="rua" label="Rua*" fullWidth
+    <TextField name="rua" label="Rua" fullWidth
     required
     focused
     value={endereco?.logradouro}
@@ -105,7 +105,7 @@ export const AutoCompleteCities: React.FC<IAutoCompleteCities> = ({
   </Grid>
   <Grid container item spacing={2}>
     <Grid item xs={12} sm={12} md={8} lg={4} xl={2}>
-    <TextField name="bairro" label="Bairro*" fullWidth
+    <TextField name="bairro" label="Bairro" fullWidth
      required
      focused
     value={endereco?.bairro} 
@@ -115,14 +115,14 @@ export const AutoCompleteCities: React.FC<IAutoCompleteCities> = ({
     />
     </Grid>
     <Grid item xs={12} sm={12} md={8} lg={4} xl={2}>
-    <TextField name="numero" label="Numero" fullWidth 
+    <TextField name="numero" label="Número*" fullWidth 
      onChange={(e)=>{setEndereco({...endereco,numero:e.target.value})}}
      value={endereco?.numero}
      focused
     />
     </Grid>
     <Grid item xs={12} sm={12} md={8} lg={4} xl={2}>
-    <TextField name="complemento" label="Complemento" fullWidth 
+    <TextField name="complemento" label="Complemento*" fullWidth 
      focused
      onChange={(e)=>{setEndereco({...endereco,complemento:e.target.value})}}
      value={endereco?.complemento}

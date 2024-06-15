@@ -167,7 +167,7 @@ export const Vendas: React.FC = () => {
                 </TableCell>
                 <TableCell>{row.cliente.nome}</TableCell>
                 <TableCell>{row.funcionario.nome}</TableCell>
-                <TableCell>{row.data}</TableCell>
+                <TableCell>{row.data.substring(0,10)}</TableCell>
                 <TableCell>{row.valorTotal}</TableCell>
               </TableRow>
             ))}

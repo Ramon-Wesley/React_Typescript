@@ -27,7 +27,7 @@ export const AutoCompleteTabelaProdutoVenda: React.FC<IAutoCompleteCities> = ({
   const [search, setSearch] = useState("");
   const [optionsTableDelete,setOptionsTableDelete]=useState<number[]>([]);
  
-  const [select, setSelect] = useState<TOptionSelected>();
+  const [select, setSelect] = useState<TOptionSelected>({id:0,nome:"",produto_id:0,valor:0,quantidade:0});
   const [options, setOptions] = useState<TOptionSelected[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [quantidade,setQuantidade]=useState(1);
@@ -59,23 +59,19 @@ export const AutoCompleteTabelaProdutoVenda: React.FC<IAutoCompleteCities> = ({
   
  // },[])
  const handleDelete=(idNumber:number)=>{
-  
-   let totalValue=0
-  optionsTable.forEach((e,index)=>{
-     if (e.produto_id === idNumber){
-     optionsTableDelete[e.produto_id]=e.quantidade;
-   } else{
-    totalValue+=e.valor
-  
-  }  
-})
-setOptionsTable((e)=>{
-  return e.filter((f)=> f.produto_id !== idNumber)
-})
-setValorTotalProdutos(totalValue)
+  setOptionsTable((prevOptions) => {
+    const updatedOptions = prevOptions.filter((elemento) => elemento.produto_id !== idNumber);
+    
+    // Atualiza o valor total após remover o elemento
+    const totalValue = updatedOptions.reduce((acc, e) => Number(acc) + Number(e.valor), 0);
+    
+    // Atualiza o estado `valorTotalProdutos`
+    setValorTotalProdutos(totalValue);
+    // Retorna o array atualizado
 
+    return updatedOptions;
+});
   
-
   
 }
   
@@ -99,7 +95,7 @@ const addServicos = () => {
         newOptionsTable = [newOption];
       }
   
-      const total = newOptionsTable.reduce((cont, value) => cont + value.valor, 0);
+      const total = newOptionsTable.reduce((cont, value) => Number(cont) + Number(value.valor), 0);
      
       setOptionsTable(newOptionsTable);
       setValorTotalProdutos(total);
@@ -130,7 +126,7 @@ const addServicos = () => {
                   response.data.map((res) => ({ id: res?.id, nome: res?.nome,quantidade:res.quantidade,valor:res.valor ,produto_id:res.id}))
                 );
 
-             
+                
               }
             });
       } catch (error) {
@@ -145,9 +141,6 @@ const addServicos = () => {
 
   const autoCompleteValue = useMemo(() => {
     if(select && select.produto_id){
-    
-    
-  
       if(optionsTableDelete.length > 0 && optionsTableDelete[select.produto_id]){
         options.forEach((op,index) => {
           if(optionsTableDelete[op.produto_id]){
@@ -159,11 +152,10 @@ const addServicos = () => {
     }
 
     setQuantidade(1);
-
     setPrecoTotal(0);
-    return select ? options.find((op) => op.id === select.id) : null;
     
-  }, [select]);
+    return select ? options.find((op) => op.id === select.id) : null;  
+  }, [select,options]);
 
   const autoCompleteValueTotal = useMemo(() => {
     return valorTotalProdutos;
@@ -186,7 +178,7 @@ const addServicos = () => {
       noOptionsText="Sem opções"
       clearText="Apagar"
       disablePortal
-      value={autoCompleteValue}
+      value={select}
       onInputChange={(_, newValue) => setSearch(newValue)}
       options={options}
       onChange={(_, newValue) => {
@@ -209,7 +201,7 @@ const addServicos = () => {
                   <TextField
                   required
                   focused
-                  value={autoCompleteValue?.valor}
+                  value={autoCompleteValue?.valor ||  0 }
                   type="number"
                   label="Preco unitario"
                   error={!!error}
