@@ -37,7 +37,7 @@ export const ComprasDetail: React.FC = () => {
   let anteriorValue:number[]=[] 
   const [typeAlert, setTypeAlert] = useState<AlertColor>();
   const [messageAlert, setMessageAlert] = useState<string>();
-
+ 
 
   const renderInfo = useCallback(async () => {
     const result = id !== "nova" && (await ComprasService.getById(Number(id)));
@@ -202,7 +202,7 @@ export const ComprasDetail: React.FC = () => {
         />
       }
     >
-      {typeAlert !== undefined && messageAlert !== undefined && (
+      {typeAlert !== undefined && messageAlert !== undefined  && (
         <Alert severity={typeAlert}>{messageAlert}</Alert>
       )}
 

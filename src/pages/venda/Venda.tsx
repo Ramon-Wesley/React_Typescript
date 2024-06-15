@@ -175,7 +175,7 @@ export const Vendas: React.FC = () => {
           <TableFooter>
             {isLoading && (
               <TableRow>
-                <TableCell colSpan={4}>{<LinearProgress />}</TableCell>
+                <TableCell colSpan={5}>{<LinearProgress />}</TableCell>
               </TableRow>
             )}
             {count > Environment.LINES_LIMITS && (

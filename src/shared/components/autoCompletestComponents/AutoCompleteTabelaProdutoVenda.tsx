@@ -6,6 +6,7 @@ import { EstoqueService, IEstoques } from "../../services/api/estoque/EstoqueSer
 import { IProdutosVendas } from "../../services/api/vendas/Vendas";
 import { VTextField } from "../../form/VTextField";
 import { TabelaProduto } from "../table/TabelaProdutos";
+import { ProdutoVendaFunc } from "./AutoCompleteTabelaProdutoVendaFunc";
 
 interface IAutoCompleteCities {
   isExternalLoading?: boolean;
@@ -21,145 +22,8 @@ type TOptionSelected = {
 export const AutoCompleteTabelaProdutoVenda: React.FC<IAutoCompleteCities> = ({
   isExternalLoading = false,
 }) => {
-  const { clearError, defaultValue, error, fieldName, registerField } =
-    useField("produtosVendas");
-  const [optionsTable,setOptionsTable]=useState<IProdutosVendas[]>(defaultValue as IProdutosVendas[]);
-  const [search, setSearch] = useState("");
-  const [optionsTableDelete,setOptionsTableDelete]=useState<number[]>([]);
  
-  const [select, setSelect] = useState<TOptionSelected>({id:0,nome:"",produto_id:0,valor:0,quantidade:0});
-  const [options, setOptions] = useState<TOptionSelected[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [quantidade,setQuantidade]=useState(1);
-  const [precoTotal,setPrecoTotal]=useState(0);
-  const [valorTotalProdutos,setValorTotalProdutos]=useState(0)
-  const { debounce } = UseDebounce();
-
-  useEffect(() => {
-    registerField({
-      name: fieldName,
-      getValue: () => optionsTable,
-      setValue: (_, newValue) => setOptionsTable(newValue ),
-    });
-     }, [registerField, fieldName, optionsTable]);
- 
- // const handleDelete=useCallback((idNumber:number)=>{
- 
-   // optionsTable.filter((e)=>{
-     // if (e.produto_id === idNumber){
-     // optionsTableDelete[e.produto_id]=e.quantidade;
-   // }})
-
-   // setOptionsTable((e)=>{
-     // return e.filter((f)=> f.produto_id !== idNumber)
-    // })
-
-   // const totalValue=optionsTable.reduce((total,value)=>{return total+value.valor},0)
-    //setValorTotalProdutos(totalValue)
-  
- // },[])
- const handleDelete=(idNumber:number)=>{
-  setOptionsTable((prevOptions) => {
-    const updatedOptions = prevOptions.filter((elemento) => elemento.produto_id !== idNumber);
-    
-    // Atualiza o valor total após remover o elemento
-    const totalValue = updatedOptions.reduce((acc, e) => Number(acc) + Number(e.valor), 0);
-    
-    // Atualiza o estado `valorTotalProdutos`
-    setValorTotalProdutos(totalValue);
-    // Retorna o array atualizado
-
-    return updatedOptions;
-});
-  
-  
-}
-  
-  
-const addServicos = () => {
-    if (autoCompleteValue?.id && autoCompleteValue.nome && !optionsTable?.find((e) => e.produto_id === autoCompleteValue.produto_id)) {
-     
-      const newOption = {
-        id: autoCompleteValue.id,
-        produto_id: autoCompleteValue.id,
-        nome: autoCompleteValue.nome,
-        valor: precoTotal,
-        valorUnitario: autoCompleteValue.valor,
-        quantidade: quantidade,
-      };
-  
-      let newOptionsTable;
-      if (optionsTable && optionsTable.length > 0) {
-          newOptionsTable = [...optionsTable, newOption];
-      } else {
-        newOptionsTable = [newOption];
-      }
-  
-      const total = newOptionsTable.reduce((cont, value) => Number(cont) + Number(value.valor), 0);
-     
-      setOptionsTable(newOptionsTable);
-      setValorTotalProdutos(total);
-      setSelect({ nome: "", id: undefined, produto_id:0,quantidade:0,valor:0});
-      setQuantidade(1);
-      setPrecoTotal(0);
-    }
-  };
-
-  useEffect(()=>{
-    if(autoCompleteValue?.valor){
-      setPrecoTotal(autoCompleteValue?.valor * quantidade)
-    }
-  },[quantidade])
-
-  const handleSearch = useCallback( () => {
-    setIsLoading(true);
-    debounce(() => {
-      try {
-        EstoqueService.getAll(search, 1).then((response) => {
-              setIsLoading(false);
-              if (response instanceof Error) {
-              } else {
-                setIsLoading(false);
-                
-             // response.data.filter((res)=>  !optionsTable.find((f)=>f.produto_id === res.id) )
-                setOptions(
-                  response.data.map((res) => ({ id: res?.id, nome: res?.nome,quantidade:res.quantidade,valor:res.valor ,produto_id:res.id}))
-                );
-
-                
-              }
-            });
-      } catch (error) {
-        
-      }
-    });
-  }, []);
-
-  useEffect(() => {
-    handleSearch();
-  }, [search]);
-
-  const autoCompleteValue = useMemo(() => {
-    if(select && select.produto_id){
-      if(optionsTableDelete.length > 0 && optionsTableDelete[select.produto_id]){
-        options.forEach((op,index) => {
-          if(optionsTableDelete[op.produto_id]){
-            op.quantidade+=optionsTableDelete[op.produto_id]
-           optionsTableDelete[op.produto_id]=0
-          }
-        })
-      }
-    }
-
-    setQuantidade(1);
-    setPrecoTotal(0);
-    
-    return select ? options.find((op) => op.id === select.id) : null;  
-  }, [select,options]);
-
-  const autoCompleteValueTotal = useMemo(() => {
-    return valorTotalProdutos;
-  }, [valorTotalProdutos]);
+  const {valorTotalProdutos,autoCompleteValue,messageAlertProduct,isLoading,select,setSearch,options,setSelect,clearError,error,precoTotal,handleDelete,quantidade,setQuantidade,addServicos,optionsTable,autoCompleteValueTotal}=ProdutoVendaFunc()
 
   return (
     <>
@@ -178,6 +42,7 @@ const addServicos = () => {
       noOptionsText="Sem opções"
       clearText="Apagar"
       disablePortal
+      isOptionEqualToValue={(option, value) => option.id === value.id}
       value={select}
       onInputChange={(_, newValue) => setSearch(newValue)}
       options={options}
@@ -189,8 +54,8 @@ const addServicos = () => {
         <TextField
         {...params}
         label="Produto"
-        error={!!error}
-        helperText={error}
+        error={!!error||!!messageAlertProduct}
+        helperText={error||messageAlertProduct}
         />
         )}
         />
