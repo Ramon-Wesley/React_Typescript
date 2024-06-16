@@ -90,7 +90,7 @@ interface IAutoCompleteCities {
         newOptionsTable = [newOption];
       }
   
-      const total = newOptionsTable.reduce((cont, value) => cont + value.valor, 0);
+      const total = newOptionsTable.reduce((cont, value) => Number(cont) + Number(value.valor), 0);
   
       setOptionsTable(newOptionsTable);
       

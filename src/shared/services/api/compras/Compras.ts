@@ -122,12 +122,12 @@ return api.put(`/compras/${id}`,compras).then((response) => {
      console.log(data)
       if (data.hasOwnProperty('errors')) {
         const res=data as IErrors
-        return new Error(res.response.data.errors[0])
+        return new Error(res.response.data.errors.toString())
       } else {
         return data.id;
       }
     }).catch((err:IErrors) => {
-      return new Error(err.response.data.errors[0])
+      return new Error(err.response.data.errors.toString())
     });
 }
 
