@@ -112,7 +112,7 @@ const deleteById=async(id:number):Promise<void |Error>=>{
 const updateById=async(id:number,vendas:Omit<IVenda,"id">):Promise<IVenda | Error>=>{
   return api.put(`/vendas/${id}`,vendas).then((response) => {
       const data = response.data;
-
+  
       if (data.hasOwnProperty('errors')) {
         const res=data as IErrors
         return new Error(res.response.data.errors[0])

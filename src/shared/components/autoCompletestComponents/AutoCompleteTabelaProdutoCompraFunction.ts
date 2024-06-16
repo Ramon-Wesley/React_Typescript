@@ -53,7 +53,7 @@ interface IAutoCompleteCities {
         const updatedOptions = prevOptions.filter((elemento) => elemento.produto_id !== idNumber);
         
         // Atualiza o valor total após remover o elemento
-        const totalValue = updatedOptions.reduce((acc, e) => acc + e.valor, 0);
+        const totalValue = updatedOptions.reduce((acc, e) => Number(acc) + Number(e.valor), 0);
         
         // Atualiza o estado `valorTotalProdutos`
         setValorTotalProdutos(totalValue);
@@ -89,7 +89,7 @@ interface IAutoCompleteCities {
       } else {
         newOptionsTable = [newOption];
       }
-  
+      
       const total = newOptionsTable.reduce((cont, value) => Number(cont) + Number(value.valor), 0);
   
       setOptionsTable(newOptionsTable);
