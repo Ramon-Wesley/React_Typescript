@@ -163,7 +163,7 @@ interface IAutoCompleteCities {
     }, [select,options]);
   
     const autoCompleteValueTotal = useMemo(() => {
-      return valorTotalProdutos;
+      return valorTotalProdutos.toFixed(2);
     }, [valorTotalProdutos]);
 
     return{
