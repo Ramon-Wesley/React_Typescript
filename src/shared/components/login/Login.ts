@@ -1,9 +1,9 @@
 import * as yup from 'yup'
-import { useState,useCallback,useRef, useMemo, FormEvent } from "react"
+import { useState,useCallback,useRef, useMemo, FormEvent, useEffect } from "react"
 import { useAuthContext } from "../../context"
 import { UseVForm } from '../../form/UseVForm';
 import { ILogin } from '../../services/api/login/Login';
-import { useMediaQuery, useTheme } from '@mui/material';
+import { AlertColor, useMediaQuery, useTheme } from '@mui/material';
 
 export const useLogin =()=>{
 const [forgotPass,setForgotPass]=useState<boolean>(false) 
@@ -19,6 +19,8 @@ const [isLoading,setIsLoading]=useState(false)
 const [errorsemail,setErrorsEmail]=useState("")
 const [errorspassword,setErrorsPassword]=useState("")
 const {isAuthenticated,login}=useAuthContext()
+const [typeAlert, setTypeAlert] = useState<AlertColor>();
+const [messageAlert, setMessageAlert] = useState<string>();
 
 const validateSchema:yup.ObjectSchema<IForm>=yup.object().shape({
         login:yup.string().email().required(),
@@ -28,14 +30,24 @@ const handleForgotPassword=(()=>{
       setForgotPass(prev=>!prev)
       console.log("teste"+forgotPass)
 })
-
+useEffect(()=>{
+    setTimeout(()=>{
+      setMessageAlert(undefined)
+      setTypeAlert(undefined)
+    },2000)
+  },[messageAlert,typeAlert])
 
 
     const handleValidate=useCallback((values: IForm)=>{
         setIsLoading(true)
         validateSchema.validate(values,{abortEarly:false})
         .then((result)=>{
-            login(result.login,result.senha).then((result)=>{
+            login(result.login,result.senha).then((response)=>{
+                if (response) {
+                    setTypeAlert("error");
+                    setMessageAlert(response);
+                    
+                  } 
                 setIsLoading(false)
                 setEmail("")
                 setPassword("")
@@ -67,8 +79,10 @@ const handleForgotPassword=(()=>{
         smDown,
         mdDown,
         handleForgotPassword,
-
-        forgotPass
+        typeAlert,
+        messageAlert,
+        forgotPass,
+        
         
     }
 }

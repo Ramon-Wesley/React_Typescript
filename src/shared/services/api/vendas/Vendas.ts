@@ -1,3 +1,4 @@
+
 import { Estoque } from '../../../../pages/estoque/Estoque';
 import { Environment } from '../../../environment/Environment';
 import { api } from '../axios';
@@ -81,7 +82,12 @@ const create=async(vendas:Omit<IVenda,"id">):Promise<IVenda | Error>=>{
         return data.id;
       }
     }).catch((err:IErrors) => {
-      return new Error(err.response.data.errors[0])
+      const result=err.response.data.errors
+      if(Array.isArray(result)){
+        return new Error(result[0])
+      }else{
+        return new Error(result)
+      }
     });
 }
 
@@ -120,7 +126,12 @@ const updateById=async(id:number,vendas:Omit<IVenda,"id">):Promise<IVenda | Erro
         return data.id;
       }
     }).catch((err:IErrors) => {
-      return new Error(err.response.data.errors[0])
+      const result=err.response.data.errors
+      if(Array.isArray(result)){
+        return new Error(result[0])
+      }else{
+        return new Error(result)
+      }
     });
 }
 

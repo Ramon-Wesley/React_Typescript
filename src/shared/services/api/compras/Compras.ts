@@ -84,7 +84,12 @@ const create=async(compras:Omit<ICompra,"id">):Promise<ICompra | Error>=>{
         return data.id;
       }
     }).catch((err:IErrors) => {
-      return new Error(err.response.data.errors[0])
+      const result=err.response.data.errors
+      if(Array.isArray(result)){
+        return new Error(result[0])
+      }else{
+        return new Error(result)
+      }
     });
 }
 
@@ -127,7 +132,12 @@ return api.put(`/compras/${id}`,compras).then((response) => {
         return data.id;
       }
     }).catch((err:IErrors) => {
-      return new Error(err.response.data.errors.toString())
+      const result=err.response.data.errors
+      if(Array.isArray(result)){
+        return new Error(result[0])
+      }else{
+        return new Error(result)
+      }
     });
 }
 

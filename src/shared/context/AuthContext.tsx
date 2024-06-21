@@ -29,10 +29,9 @@ const handleLogin=useCallback(async(email:string,password:string)=>{
    const result = await authService.auth(email,password)
    
    if(result instanceof Error) {
-       return result.message
+       return "Email ou senha inválidos!"
    }else{  
        localStorage.setItem(LOCAL_STORAGE_KEY,JSON.stringify(result.accessToken))
-       console.log(result.accessToken)
        setAccessToken(result.accessToken)
     }
 

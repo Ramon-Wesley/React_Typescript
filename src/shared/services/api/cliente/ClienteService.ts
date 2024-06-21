@@ -115,7 +115,7 @@ const updateById = async (
      } else {
        return data.id;
      }
-    } catch (err ) {
+    } catch (err) {
       return new Error(err as string)  
     }
    
